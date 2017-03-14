@@ -5,23 +5,22 @@ import Main from './Main'
 import Restaurant from './Restaurant'
 import axios from 'axios';
 
-// const config = {
-//   headers: {
-//     Authorization: `Bearer ${F8rgwQR1sfY1mJPE-2UVbj_A1eqjpyOD}`
-//   }
-// }
-//
-// componentDidMount(){
-//   axios.get('https://api.yelp.com/v3/businesses/search?term=Sushi&location=Boston', config)
-//   .then(function(res){
-//       console.log(res)
-//   })
-//   .catch(function(err){
-//       console.log(err)
-//   })
-// }
 
 class ListView extends Component {
+
+
+  componentDidMount(){
+    axios.get('https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972', {headers: {
+      'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
+    }})
+    .then(function(res){
+        console.log(res)
+    })
+    .catch(function(err){
+        console.log(err)
+    })
+  }
+
   _handleBackPress() {
     this.props.navigator.pop();
   }
