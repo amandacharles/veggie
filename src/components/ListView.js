@@ -17,7 +17,6 @@ class ListView extends Component {
     selectedIndex: 0
   }
 
-
   componentDidMount(){
     axios.get(`https://api.yelp.com/v3/businesses/search?term=vegan&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}`,
       {headers: {
@@ -52,6 +51,20 @@ class ListView extends Component {
   console.log(this.state.price);
 }
 
+onButtonPress(){
+  axios.get(`https://api.yelp.com/v3/businesses/search?term=vegan&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}`,
+    {headers: {
+    'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
+  }})
+  .then(function(res){
+      console.log(res.data.businesses)
+
+  })
+  .catch(function(err){
+      console.log(err)
+  })
+}
+
   render() {
     const RestaurantRoute = {
       component: Restaurant,
@@ -60,25 +73,25 @@ class ListView extends Component {
     };
     return(
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+
         <View style={{borderWidth: 1}}>
           <Switch
             onValueChange={(value) => this.setState({openNow: value})}
             value={this.state.openNow} />
         </View>
-        <View>
+
           <View style={{marginBottom: 10}}>
-
-
           <SegmentedControlIOS tintColor="#ff0000" values={['1,2,3,4', '1', '2,3','4']}
             selectedIndex={this.state.selectedIndex}
              onChange={(event) => {
       this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
         this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
-    }} />
+                      }} />
         </View>
-        <View>
+
+        <View style={{borderWidth: 1, height:30}}>
+          <Button onPress={this.onButtonPress.bind(this)}>Reload</Button>
         </View>
-</View>
 
       <TouchableHighlight onPress={() => this._handleNextPress(RestaurantRoute)}>
         <Text style={{marginTop: 100}}>
