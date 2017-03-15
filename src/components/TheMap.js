@@ -67,6 +67,7 @@ onRegionChange(region) {
           /> */}
           {this.state.markers.map(marker => {
             return <MapView.Marker
+              key={marker.title}
             coordinate={marker['latlng']}
           />
         })}
