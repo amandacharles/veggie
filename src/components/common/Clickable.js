@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
+
 const Clickable = ({ onPress, children }) => {
   const { buttonStyle } = styles;
 
