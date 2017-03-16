@@ -1,10 +1,46 @@
 import React, { Component, PropTypes } from 'react';
-import { SegmentedControlIOS, Text, NavigatorIOS, View, TouchableHighlight, Switch, ScrollView, Linking } from 'react-native';
-import { Button, CardSection, Input, Spinner, Card } from './common';
+import { SegmentedControlIOS, Text, NavigatorIOS, View, TouchableHighlight, Switch, ScrollView, Linking, StyleSheet, Image } from 'react-native';
+import { Button, CardSection, Input, Spinner, Card, Clickable } from './common';
 import Main from './Main'
 import Item from './Item'
 import Restaurant from './Restaurant'
 import axios from 'axios';
+import Favorites from './Favorites'
+import firebase from 'firebase'
+
+const styles = {
+    headerContentStyle: {
+      flexDirection: 'column',
+      justifyContent: 'space-around'
+    },
+    headerTextStyle: {
+      fontSize: 18
+    },
+    thumbNailStyle: {
+      height: 50,
+      width: 50
+    },
+    thumbNailContainerStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginLeft: 10,
+      marginRight: 10
+    },
+    imageStyle: {
+      height: 300,
+      flex: 1,
+      width: null
+    },
+  }
+
+  const { thumbNailStyle,
+    headerContentStyle,
+    thumbNailContainerStyle,
+    headerTextStyle,
+    imageStyle
+    } = styles;
+
+
 
 
 class ListView extends Component {
@@ -19,13 +55,37 @@ class ListView extends Component {
     values: ['One', 'Two', 'Three'],
     selectedIndex: 0,
     results: [],
+    FavoritesRoute: {
+      component: Favorites,
+      title: "Favorites",
+    }
+
 
   }
   this.setPriceRange = this.setPriceRange.bind(this);
   this.componentWillMount = this.componentWillMount.bind(this)
   this.renderRestaurantList = this.renderRestaurantList.bind(this)
   this.callApi = this.callApi.bind(this);
+  this._handleBackPress = this._handleBackPress.bind(this);
+  this._handleNextPress = this._handleNextPress.bind(this);
+  this.sendToDatabase = this.sendToDatabase.bind(this);
 }
+
+sendToDatabase(display_phone, image_url, name, price, rating, id, url) {
+  const database = firebase.database()
+
+ firebase.database().ref('favorites/' + name).set({
+   phone: display_phone,
+   image: image_url,
+   name: name,
+   price: price,
+   rating: rating,
+   id: id,
+   photo: url
+ });
+}
+
+
 
 callApi(){
   axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}`,
@@ -76,14 +136,40 @@ componentWillMount(){
 }
 
 renderRestaurantList(){
-  return this.state.results.map(result => <Item key={result.id} result={result}>{result.name}</Item>)
+  return this.state.results.map(result =>
+    <Card key={result.id}>
+        <CardSection>
+          <View style={thumbNailContainerStyle}>
+          </View>
+          <View style={headerContentStyle}>
+            <Text style={headerTextStyle}>{ result.name }</Text>
+            <Text>{result.display_phone}   Rating:{result.rating}/5</Text>
+          </View>
+          <View style={{alignItems: "flex-end"}}>
+          <Clickable onPress={()=> this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url),
+          ()=> this._handleNextPress(this.state.FavoritesRoute)}>
+          <Image
+          style={thumbNailStyle}
+          source={{ uri: result.image_url }}/>
+    </Clickable>
+    </View>
+      </CardSection>
+      <CardSection>
+
+      </CardSection>
+      <Clickable onPress={()=> Linking.openURL(url)}>
+      <CardSection>
+        <Image style={imageStyle} source={{ uri: result.image_url }}/>
+      </CardSection>
+    </Clickable>
+      </Card>
+  )
 }
 
   render() {
-    const RestaurantRoute = {
-      component: Restaurant,
-      title: 'Restaurant',
-    }
+
+
+
     return(
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
         <ScrollView>
