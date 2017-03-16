@@ -8,7 +8,6 @@ import axios from 'axios';
 import Favorites from './Favorites'
 import * as firebase from "firebase";
 
-
 const styles = {
     headerContentStyle: {
       flexDirection: 'column',
@@ -74,7 +73,7 @@ sendToDatabase(display_phone, image_url, name, price, rating, id, url) {
   const userId = firebase.auth().currentUser.uid;
   var database = firebase.database();
 
- firebase.database().ref('favorites/' + name).set({
+ firebase.database().ref('favorites/').push({
    phone: display_phone,
    photo: image_url,
    name: name,
@@ -83,6 +82,7 @@ sendToDatabase(display_phone, image_url, name, price, rating, id, url) {
    id: id,
    url: url
  })
+ this._handleNextPress(this.state.FavoritesRoute)
 }
 
 
@@ -162,14 +162,14 @@ renderRestaurantList(){
             <Text>{result.display_phone}   Rating:{result.rating}/5</Text>
           </View>
           <View style={{alignItems: "flex-end"}}>
-          <Clickable onPress={this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url)}>
+            <TouchableHighlight onPress={()=>this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url)}>
 
-          {/* // ()=> this._handleNextPress(this.state.FavoritesRoute) */}
 
           <Image
           style={thumbNailStyle}
           source={{ uri: result.image_url }}/>
-    </Clickable>
+
+  </TouchableHighlight>
     </View>
       </CardSection>
       <CardSection>

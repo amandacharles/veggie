@@ -19,7 +19,7 @@ componentDidMount(){
 
   const database = firebase.database()
   const userId = firebase.auth().currentUser.uid;
-  firebase.database().ref('/favorites/Quince').once('value').then((snapshot) => {
+  firebase.database().ref('favorites').once('value').then((snapshot) => {
   // this.setState({
   //   name: snapshot.val().name
   // })
