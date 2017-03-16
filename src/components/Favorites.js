@@ -19,12 +19,13 @@ componentDidMount(){
 
   const database = firebase.database()
   const userId = firebase.auth().currentUser.uid;
-  firebase.database().ref('/favorites/' + userId).once('value').then((snapshot) => {
+  firebase.database().ref('/favorites/Quince').once('value').then((snapshot) => {
   // this.setState({
   //   name: snapshot.val().name
   // })
-  console.log(userId);
-  console.log(snapshot);
+  var all = firebase.database().ref('favorites').limitToLast(100);
+
+  console.log(all)
  })
 }
 

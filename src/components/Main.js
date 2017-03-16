@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
-import firebase from 'firebase';
 import { Button, Card, CardSection } from './common';
 import LoginForm from './LoginForm';
 import ListView from './ListView';
 import TheMap from './TheMap';
 import Favorites from './Favorites'
+import * as firebase from "firebase";
+
 
 
 class Main extends Component {
@@ -58,32 +59,29 @@ class Main extends Component {
       <View style={{flex:1, justifyContent: 'center'}}>
         <View>
       { (this.state.loggedIn) ?
-         ( <View>
+         ( <View style={styles.buttonContainer}>
+           <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
+             style={styles.mainButtonStyle}>
+             <Text style={styles.textStyle}>
+               Map
+             </Text>
+           </TouchableHighlight>
            <TouchableHighlight
              onPress={() => this._handleNextPress(ListViewRoute)}
              style={styles.mainButtonStyle}>
-           <Text style={{alignSelf: 'center'}}>
-             {/* See you on the other nav {this.props.myProp}! */}
-             click me to go to ListView
+           <Text style={styles.textStyle}>
+             List
            </Text>
          </TouchableHighlight>
 
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}
            style={styles.mainButtonStyle}>
-           <Text style={{alignSelf: 'center'}}>
-             {/* See you on the other nav {this.props.myProp}! */}
-             click me to go to FAVORITES
+           <Text style={styles.textStyle}>
+             Favorites
            </Text>
          </TouchableHighlight>
 
-         <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-           style={styles.mainButtonStyle}>
-           <Text style={{alignSelf: 'center'}}>
-             {/* See you on the other nav {this.props.myProp}! */}
-             click me to go to MapView
-           </Text>
-         </TouchableHighlight>
        </View>)
 
       : (
@@ -100,11 +98,24 @@ class Main extends Component {
 
 const styles = {
   mainButtonStyle: {
-    height: 50,
+    height: 100,
     borderWidth: 1,
+    borderRadius: 5,
     borderColor: 'black',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: 5,
+    marginRight:5,
+    marginLeft: 5,
 
+  },
+  buttonContainer: {
+    flex: 1,
+    height: 30,
+    justifyContent: 'space-between',
+  },
+  textStyle: {
+    alignSelf: 'center',
+    fontSize: 30,
   }
 }
 

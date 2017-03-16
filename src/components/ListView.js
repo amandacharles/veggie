@@ -6,7 +6,8 @@ import Item from './Item'
 import Restaurant from './Restaurant'
 import axios from 'axios';
 import Favorites from './Favorites'
-import firebase from 'firebase'
+import * as firebase from "firebase";
+
 
 const styles = {
     headerContentStyle: {
@@ -24,7 +25,8 @@ const styles = {
       justifyContent: 'center',
       alignItems: 'center',
       marginLeft: 10,
-      marginRight: 10
+      marginRight: 10,
+      padding: 1
     },
     imageStyle: {
       height: 300,
@@ -39,8 +41,6 @@ const styles = {
     headerTextStyle,
     imageStyle
     } = styles;
-
-
 
 
 class ListView extends Component {
@@ -60,7 +60,6 @@ class ListView extends Component {
       title: "Favorites",
     }
 
-
   }
   this.setPriceRange = this.setPriceRange.bind(this);
   this.componentWillMount = this.componentWillMount.bind(this)
@@ -72,36 +71,53 @@ class ListView extends Component {
 }
 
 sendToDatabase(display_phone, image_url, name, price, rating, id, url) {
-  const database = firebase.database()
+  const userId = firebase.auth().currentUser.uid;
+  var database = firebase.database();
 
  firebase.database().ref('favorites/' + name).set({
    phone: display_phone,
-   image: image_url,
+   photo: image_url,
    name: name,
    price: price,
    rating: rating,
    id: id,
-   photo: url
- });
+   url: url
+ })
 }
 
 
-
 callApi(){
-  axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}`,
+  axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants,vegetarian&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}&limit=50&radius=30000`,
     {headers: {
     'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
   }
 })
   .then((res) => {
-      console.log(res.data.businesses)
-      // let idNames = res.data.businesses.map(result => result.id)
-      this.setState({ results: res.data.businesses })
+    let veggieArray = [];
+
+    for (let i = 0; i < res.data.businesses.length; i++) {
+      let categoriesArray = res.data.businesses[i].categories
+        categoriesArray.map(category => {
+          console.log(category.alias);
+          if(category.alias === 'vegetarian' ||
+          category.alias === 'vegan' ||
+          category.alias === 'thai' ||
+          category.alias === 'indian' ||
+          category.alias === 'mediterranean' ||
+          category.alias === 'asianfusion'
+        ){
+            veggieArray.push(res.data.businesses[i])
+          }
+        })
+       }
+
+      this.setState({ results: veggieArray})
   })
   .catch(function(err){
       console.log(err)
   })
 }
+
 
 componentWillMount(){
   navigator.geolocation.getCurrentPosition(
@@ -113,7 +129,7 @@ componentWillMount(){
       }
   )
   this.callApi()
-  }
+}
 
 
   _handleBackPress() {
@@ -146,8 +162,10 @@ renderRestaurantList(){
             <Text>{result.display_phone}   Rating:{result.rating}/5</Text>
           </View>
           <View style={{alignItems: "flex-end"}}>
-          <Clickable onPress={()=> this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url),
-          ()=> this._handleNextPress(this.state.FavoritesRoute)}>
+          <Clickable onPress={this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url)}>
+
+          {/* // ()=> this._handleNextPress(this.state.FavoritesRoute) */}
+
           <Image
           style={thumbNailStyle}
           source={{ uri: result.image_url }}/>
@@ -157,7 +175,7 @@ renderRestaurantList(){
       <CardSection>
 
       </CardSection>
-      <Clickable onPress={()=> Linking.openURL(url)}>
+      <Clickable onPress={()=> Linking.openURL(result.url)}>
       <CardSection>
         <Image style={imageStyle} source={{ uri: result.image_url }}/>
       </CardSection>

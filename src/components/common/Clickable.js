@@ -22,7 +22,7 @@ const Clickable = ({ onPress, children }) => {
       backgroundColor: '#fff',
       marginLeft: 5,
       marginRight: 5,
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
     }
   }
 

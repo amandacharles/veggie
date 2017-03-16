@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Text, View, NavigatorIOS } from 'react-native';
 import LoginForm from './src/components/LoginForm';
 import Main from './src/components/Main'
+import * as firebase from "firebase";
+
 
 
 export default class App extends React.Component {
@@ -10,7 +12,7 @@ export default class App extends React.Component {
       <NavigatorIOS
         initialRoute={{
           component: Main,
-          title: 'Veg',
+          title: 'VegOut',
         }}
         style={{flex: 1}}
       />
