@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
 import { Card, Button, CardSection, Input, Spinner } from './common';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import axios from 'axios'
 
 
@@ -136,6 +136,7 @@ callMyMarkers(){
   this.state.markers.map(marker => {
   <MapView.Marker
     image={require('./carrot.jpg')}
+    style={{height: 30}}
     coordinate={marker.latlng}
     title={marker.title}
     description={marker.description}
@@ -161,7 +162,8 @@ callMyMarkers(){
             coordinate={marker['latlng']}
             title={marker.title}
             description={marker.description}
-          />
+          >
+        </MapView.Marker>
         })}
         </MapView>
     </View>

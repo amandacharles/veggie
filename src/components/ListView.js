@@ -18,7 +18,9 @@ const styles = {
     },
     thumbNailStyle: {
       height: 50,
-      width: 50
+      width: 50,
+      flexDirection: 'column',
+      justifyContent: 'flex-end'
     },
     thumbNailContainerStyle: {
       justifyContent: 'center',
@@ -26,6 +28,7 @@ const styles = {
       marginLeft: 10,
       marginRight: 10,
       padding: 1
+
     },
     imageStyle: {
       height: 300,
@@ -47,8 +50,8 @@ class ListView extends Component {
     super(props)
 
   this.state = {
-    latitude: 45.786882,
-    longitude: -122.399832,
+    latitude: 47.6062,
+    longitude: 122.3321,
     openNow: true,
     price: '1,2,3,4',
     values: ['One', 'Two', 'Three'],
@@ -69,55 +72,72 @@ class ListView extends Component {
   this.sendToDatabase = this.sendToDatabase.bind(this);
 }
 
-sendToDatabase(display_phone, image_url, name, price, rating, id, url) {
+sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
   const userId = firebase.auth().currentUser.uid;
   var database = firebase.database();
 
  firebase.database().ref('favorites/').push({
-   phone: display_phone,
-   photo: image_url,
    name: name,
-   price: price,
-   rating: rating,
-   id: id,
-   url: url
+   short_description: short_description,
+   price_range: price_range,
+   veg_level_description: veg_level_description,
+   phone: phone,
+   website: website,
+   postal_code: postal_code,
+   veg_level: veg_level
  })
  this._handleNextPress(this.state.FavoritesRoute)
 }
 
-
 callApi(){
-  axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants,vegetarian&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}&limit=50&radius=30000`,
+  axios.get(`http://www.vegguide.org/search/by-lat-long/47.6195700,-122.3212680/distance=20/filter/veg_level=5`,
     {headers: {
-    'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
+    'User-Agennt': 'Vegout Project'
   }
 })
-  .then((res) => {
-    let veggieArray = [];
-
-    for (let i = 0; i < res.data.businesses.length; i++) {
-      let categoriesArray = res.data.businesses[i].categories
-        categoriesArray.map(category => {
-          console.log(category.alias);
-          if(category.alias === 'vegetarian' ||
-          category.alias === 'vegan' ||
-          category.alias === 'thai' ||
-          category.alias === 'indian' ||
-          category.alias === 'mediterranean' ||
-          category.alias === 'asianfusion'
-        ){
-            veggieArray.push(res.data.businesses[i])
-          }
-        })
-       }
-
-      this.setState({ results: veggieArray})
+.then((res) => {
+  console.log(res.data.entries[4]);
+  this.setState({
+    results: res.data.entries
   })
-  .catch(function(err){
+})
+.catch(function(err){
       console.log(err)
   })
 }
 
+// YELP API CALL  ****************
+// callApi(){
+//   axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants,vegetarian&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}&limit=50&radius=30000`,
+//     {headers: {
+//     'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
+//   }
+// })
+//   .then((res) => {
+//     let veggieArray = [];
+//
+//     for (let i = 0; i < res.data.businesses.length; i++) {
+//       let categoriesArray = res.data.businesses[i].categories
+//         categoriesArray.map(category => {
+//           console.log(category.alias);
+//           if(category.alias === 'vegetarian' ||
+//           category.alias === 'vegan' ||
+//           category.alias === 'thai' ||
+//           category.alias === 'indian' ||
+//           category.alias === 'mediterranean' ||
+//           category.alias === 'asianfusion'
+//         ){
+//             veggieArray.push(res.data.businesses[i])
+//           }
+//         })
+//        }
+//       this.setState({ results: veggieArray})
+//   })
+//   .catch(function(err){
+//       console.log(err)
+//   })
+// }
+// *****************
 
 componentWillMount(){
   navigator.geolocation.getCurrentPosition(
@@ -130,7 +150,6 @@ componentWillMount(){
   )
   this.callApi()
 }
-
 
   _handleBackPress() {
     this.props.navigator.pop();
@@ -153,67 +172,88 @@ componentWillMount(){
 
 renderRestaurantList(){
   return this.state.results.map(result =>
-    <Card key={result.id}>
-        <CardSection>
-          <View style={thumbNailContainerStyle}>
-          </View>
-          <View style={headerContentStyle}>
+    <Card key={result.name}>
+
+      <Clickable onPress={()=> Linking.openURL(result.website)}>
+        <View style={thumbNailContainerStyle}>
+          <View >
             <Text style={headerTextStyle}>{ result.name }</Text>
-            <Text>{result.display_phone}   Rating:{result.rating}/5</Text>
           </View>
-          <View style={{alignItems: "flex-end"}}>
-            <TouchableHighlight onPress={()=>this.sendToDatabase(result.display_phone, result.image_url, result.name, result.price, result.rating, result.id, result.url)}>
+        </View>
+      </Clickable>
 
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
 
-          <Image
-          style={thumbNailStyle}
-          source={{ uri: result.image_url }}/>
+        <View style={{flexDirection:"row", justifyContent: "flex-start"}}>
+            <CardSection>
+              <View style={headerContentStyle}>
+                <Clickable onPress={()=> Linking.openURL(result.website)}>
+                <Text>{result.phone}</Text>
+                <Text style={{flexWrap: "wrap"}}>{result.veg_level_description}</Text>
+                <Text>{result.price_range}</Text>
+                <Text style={{flexWrap: "wrap"}}>{result.short_description}</Text>
+              </Clickable>
+              </View>
+            </CardSection>
+        </View>
 
-  </TouchableHighlight>
-    </View>
+<View style={{flexDirection:"column", justifyContent: "flex-end"}}>
+        <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}} onPress={()=>this.sendToDatabase(result.name, result.short_description,result.price_range, result.veg_level_description, result.phone, result.website, result.postal_code, result.veg_level)}>
+        <View style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
+            <Image
+              style={thumbNailStyle}
+              source={require('./carrot.jpg')}/>
+          </View>
+        </Clickable>
+      </View>
+        </View>
+      </Card>
+    )
+  }
+
+/* <View style={{flexDirection: 'row', justifyContent: "space-between"}}>
+        <CardSection>
+          <View style={headerContentStyle}>
+            <Text style={{flexWrap: "wrap"}}>{result.veg_level_description}</Text>
+            <Text>{result.price_range}</Text>
+            <Text>{result.phone}</Text>
+          <Text>{result.short_description}</Text>
+          </View>
       </CardSection>
-      <CardSection>
-
-      </CardSection>
-      <Clickable onPress={()=> Linking.openURL(result.url)}>
+      <Clickable onPress={()=> Linking.openURL(result.website)}>
       <CardSection>
         <Image style={imageStyle} source={{ uri: result.image_url }}/>
       </CardSection>
-    </Clickable>
-      </Card>
-  )
-}
+    </Clickable> */
 
   render() {
-
-
 
     return(
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
         <ScrollView>
 
-        <View style={{borderWidth: 1}}>
-          <Switch
-            onValueChange={(value) => this.setState({openNow: value})}
-            value={this.state.openNow} />
-        </View>
+          <View style={{borderWidth: 1}}>
+            <Switch
+              onValueChange={(value) => this.setState({openNow: value})}
+              value={this.state.openNow} />
+            </View>
 
-          <View style={{marginBottom: 10}}>
-          <SegmentedControlIOS tintColor="#ff0000" values={['1,2,3,4', '1', '2,3','4']}
-            selectedIndex={this.state.selectedIndex}
-             onChange={(event) => {
-      this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
-        this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
-                      }} />
-        </View>
+            <View style={{marginBottom: 10}}>
+              <SegmentedControlIOS tintColor="#ff0000" values={['1,2,3,4', '1', '2,3','4']}
+                selectedIndex={this.state.selectedIndex}
+                onChange={(event) => {
+                  this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
+                  this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
+                }} />
+              </View>
 
-        <View style={{borderWidth: 1, height:30}}>
-          <Button onPress={this.callApi}>Reload</Button>
-        </View>
+              <View style={{borderWidth: 1, height:30}}>
+                <Button onPress={this.callApi}>Reload</Button>
+              </View>
 
-      {this.renderRestaurantList()}
-    </ScrollView>
-    </View>
+              {this.renderRestaurantList()}
+            </ScrollView>
+          </View>
     );
   }
 }
