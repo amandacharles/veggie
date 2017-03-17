@@ -1,42 +1,59 @@
 import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from './common';
-import firebase from 'firebase'
+import * as firebase from 'firebase';
 
 
 class Favorites extends Component {
   constructor(props){
     super(props)
     this.state = {
-      name: ''
+      name: '',
+      favorites: []
     }
+    this.componentWillMount = this.componentWillMount.bind(this)
+    this.showFavorites = this.showFavorites.bind(this)
+  }
 
-    this.componentDidMount = this.componentDidMount.bind(this)
+  componentWillMount(){
+    const database = firebase.database();
+    itemsRef = database.ref('favorites');
+    let snapArray = [];
+
+    itemsRef.on('value', (snap) => {
+      snap.val()
+    });
+
+
+    itemsRef.once('value', function (snap) {
+      snap.forEach(function (childSnap) {
+        snapArray.push(childSnap.val())
+      });
+    })
+
+    this.setState({
+      favorites: snapArray
+    })
   }
 
 
-componentDidMount(){
 
-  const database = firebase.database()
-  const userId = firebase.auth().currentUser.uid;
-  firebase.database().ref('favorites').once('value').then((snapshot) => {
-  // this.setState({
-  //   name: snapshot.val().name
-  // })
-  var all = firebase.database().ref('favorites').limitToLast(100);
 
-  console.log(all)
- })
-}
+
+showFavorites(){
+    return this.state.favorites.map(favorite => {
+      <View style={{height: 30, borderWidth: 10, borderColor: 'red'}}>
+        <Text>{favorite.name}</Text>
+      </View>
+    })
+    console.log(favorite.name);
+  }
 
   render() {
-    return(
-      <View>
-        <Text style={{fontSize: 30, paddingTop: 100 }}>
-          This is the Favorites component
-        </Text>
-
-    </View>
+    return (
+      <View style={{flex: 1, justifyContent: 'center', borderWidth: 5}}>
+          {this.showFavorites}
+      </View>
     );
   }
 }

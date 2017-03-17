@@ -145,7 +145,7 @@ callMyMarkers(){
 
   render() {
     // console.log(this.state.markers);
-    return(
+    return (
       <View style={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF'}}>
         <MapView style={{position: 'absolute',
