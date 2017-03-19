@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { SegmentedControlIOS, Text, NavigatorIOS, View, TouchableHighlight, Switch, ScrollView, Linking, StyleSheet, Image } from 'react-native';
+import { SegmentedControlIOS, Text, NavigatorIOS, View, TouchableHighlight, Switch, ScrollView, Linking, StyleSheet, Image, PickerIOS } from 'react-native';
 import { Button, CardSection, Input, Spinner, Card, Clickable } from './common';
 import Main from './Main'
 import Item from './Item'
@@ -44,6 +44,8 @@ const styles = {
     imageStyle
     } = styles;
 
+    const PickerItemIOS = PickerIOS.Item;
+
 
 class ListView extends Component {
   constructor(props){
@@ -57,6 +59,7 @@ class ListView extends Component {
     values: ['One', 'Two', 'Three'],
     selectedIndex: 0,
     results: [],
+    vegLevel: '5',
     FavoritesRoute: {
       component: Favorites,
       title: "Favorites",
@@ -231,15 +234,46 @@ renderRestaurantList(){
     return(
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
         <ScrollView>
+          <View>
+            <PickerIOS
+                      selectedValue={this.state.vegLevel}
+                      onValueChange={(value) => this.setState({vegLevel: value})}>
 
-          <View style={{borderWidth: 1}}>
+                        <PickerItemIOS
+                          value={'5'}
+                          label={'Straight up Vegan'}
+                        />
+                        <PickerItemIOS
+                          value={'4'}
+                          label={'Vegan prefered.'}
+                        />
+                        <PickerItemIOS
+                          value={'3'}
+                          label={'Vegetarian, at least'}
+                        />
+                        <PickerItemIOS
+                          value={'2'}
+                          label={'Non-meat options'}
+                        />
+                        <PickerItemIOS
+                          value={1}
+                          label={'guacomole is vegan.'}
+                        />
+
+                    </PickerIOS>
+         </View>
+
+
+
+
+          {/* <View style={{borderWidth: 1}}>
             <Switch
               onValueChange={(value) => this.setState({openNow: value})}
               value={this.state.openNow} />
-            </View>
+            </View> */}
 
             <View style={{marginBottom: 10}}>
-              <SegmentedControlIOS tintColor="#ff0000" values={['1,2,3,4', '1', '2,3','4']}
+              <SegmentedControlIOS tintColor="#ff0000" values={[ 'cheap $', 'reasonable $$','date night $$$', 'whatever']}
                 selectedIndex={this.state.selectedIndex}
                 onChange={(event) => {
                   this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
