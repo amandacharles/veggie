@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, NavigatorIOS, View, TouchableHighlight, ListView, Image, ScrollView} from 'react-native';
+import { Text, NavigatorIOS, View, TouchableHighlight, ListView, Image, ScrollView, Linking} from 'react-native';
 import { Button, CardSection, Input, Spinner, Card, Clickable } from './common';
 import * as firebase from 'firebase';
 
@@ -43,12 +43,14 @@ const styles = {
 class Favorites extends Component {
   constructor(props){
     super(props)
+
     this.state = {
       name: '',
-      favorites: []
+      snaps: []
     }
-    // this.componentWillMount = this.componentWillMount.bind(this)
-    this.showFavorites = this.showFavorites.bind(this)
+    // this.showFavorites = this.showFavorites.bind(this)
+    this.renderFavorite = this.renderFavorite.bind(this)
+    this.deleteFav = this.deleteFav.bind(this)
   }
 
   componentWillMount(){
@@ -63,34 +65,56 @@ class Favorites extends Component {
     });
     itemsRef.once('value', function (snap) {
        snap.forEach(function (childSnap) {
-        snapArray.push(childSnap.val())
+        snapArray.push(childSnap)
         self.setState({
-          favorites: snapArray
+          snaps: snapArray
         })
       });
     })
   }
 
 
-showFavorites(){
-    const favorites = this.state.favorites;
 
-  Object.keys(favorites).map((key, index) => {
-    console.log(key);
-    let favorite = favorites[key];
-    return
-    <View>
-    <Text>{favorite.name}</Text>
-    </View>
-  });
+// showFavorites(){
+//     const favorites = this.state.favorites;
+//
+//   Object.keys(favorites).map((key, index) => {
+//     console.log(key);
+//     let favorite = favorites[key];
+//     return
+//     <View>
+//     <Text>{favorite.name}</Text>
+//     </View>
+//   });
+//
+// }
+
+deleteFav(fav){
+  const self = this;
+
+  const database = firebase.database();
+  favesRef = database.ref('favorites');
+
+  favesRef.child(`${fav.key}`).remove();
+
+
+
+  let index = this.state.snaps.indexOf(fav)
+  const newArr = [...this.state.snaps]
+  newArr.splice(index, 1)
+
+    self.setState({
+    snaps: newArr
+  })
 }
 
-renderFavorite(fav) {
+renderFavorite(snap) {
+  const fav = snap.val()
   return (
   <View>
     <Card key={fav.name}>
 
-          <Clickable onPress={()=> Linking.openURL(fave.website)}>
+          <Clickable onPress={()=> Linking.openURL(fav.website)}>
             <View style={thumbNailContainerStyle}>
               <View >
                 <Text style={headerTextStyle}>{ fav.name }</Text>
@@ -114,7 +138,8 @@ renderFavorite(fav) {
             </View>
 
     <View style={{flexDirection:"column", justifyContent: "flex-end"}}>
-            <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
+            <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}}
+              onPress={()=> this.deleteFav(snap)}>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
                 <Text style={{marginRight:10, marginBottom:10, fontSize:20, color:'red', fontWeight:'300'}}>X</Text>
               </View>
@@ -128,12 +153,11 @@ renderFavorite(fav) {
 
 
   render() {
-    console.log(this.state.favorites);
+    console.log(this.state.snaps);
     return (
       <View style={{flex: 1, justifyContent: 'center', borderWidth: 5}}>
       <ScrollView>
-          {/* {this.showFavorites()} */}
-          {this.state.favorites.map(this.renderFavorite)}
+          {this.state.snaps.map(this.renderFavorite)}
       </ScrollView>
     </View>
     );

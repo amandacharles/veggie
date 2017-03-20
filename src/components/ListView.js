@@ -80,6 +80,8 @@ class ListView extends Component {
 sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
   const userId = firebase.auth().currentUser.uid;
   var database = firebase.database();
+  var newFavKey = firebase.database().ref().child('favorites').push().key;
+
 
  firebase.database().ref('favorites/').push({
    name: name,
@@ -89,7 +91,8 @@ sendToDatabase(name, short_description, price_range, veg_level_description, phon
    phone: phone,
    website: website,
    postal_code: postal_code,
-   veg_level: veg_level
+   veg_level: veg_level,
+   key: newFavKey
  })
  this._handleNextPress(this.state.FavoritesRoute)
 }
