@@ -71,14 +71,6 @@ class Favorites extends Component {
     })
   }
 
-// showFavorites(){
-//   console.log(this.state.favorites);
-//     return this.state.favorites.map(favorite => {
-//       <View style={{height: 30, borderWidth: 10, borderColor: 'red'}}>
-//         <Text>{favorite.name}</Text>
-//       </View>
-//     })
-//   }
 
 showFavorites(){
     const favorites = this.state.favorites;
@@ -124,9 +116,7 @@ renderFavorite(fav) {
     <View style={{flexDirection:"column", justifyContent: "flex-end"}}>
             <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
             <View style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
-                <Image
-                  style={thumbNailStyle}
-                  source={require('./carrot.jpg')}/>
+                <Text style={{marginRight:10, marginBottom:10, fontSize:20, color:'red', fontWeight:'300'}}>X</Text>
               </View>
             </Clickable>
           </View>

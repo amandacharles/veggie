@@ -16,13 +16,6 @@ const Clickable = ({ onPress, children }) => {
 
   const styles = {
     buttonStyle: {
-      // borderWidth: 1,
-      // flexDirection: 'column',
-      // alignItems: 'flex-end',
-      // // alignSelf: 'stretch',
-      // backgroundColor: '#fff',
-      // marginLeft: 5,
-      // marginRight: 5,
     }
   }
 

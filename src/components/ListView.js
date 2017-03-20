@@ -55,24 +55,26 @@ class ListView extends Component {
     latitude: 47.6062,
     longitude: 122.3321,
     openNow: true,
-    price: '1,2,3,4',
+    price: '$$$ - expensive',
     values: ['One', 'Two', 'Three'],
     selectedIndex: 0,
     results: [],
-    vegLevel: '5',
     FavoritesRoute: {
       component: Favorites,
-      title: "Favorites",
-    }
-
+      title: "Favorites"
+    },
+    filters: 'veg_level=5',
+    filteredResults: []
   }
-  this.setPriceRange = this.setPriceRange.bind(this);
+
+  // this.setPriceRange = this.setPriceRange.bind(this);
   this.componentWillMount = this.componentWillMount.bind(this)
   this.renderRestaurantList = this.renderRestaurantList.bind(this)
   this.callApi = this.callApi.bind(this);
   this._handleBackPress = this._handleBackPress.bind(this);
   this._handleNextPress = this._handleNextPress.bind(this);
   this.sendToDatabase = this.sendToDatabase.bind(this);
+  this.priceFiltered = this.priceFiltered.bind(this);
 }
 
 sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
@@ -93,54 +95,24 @@ sendToDatabase(name, short_description, price_range, veg_level_description, phon
 }
 
 callApi(){
-  axios.get(`http://www.vegguide.org/search/by-lat-long/47.6195700,-122.3212680/distance=20/filter/veg_level=5`,
+  axios.get(`http://www.vegguide.org/search/by-lat-long/47.6195700,-122.3212680/filter/distance=20;${this.state.filters}`,
     {headers: {
-    'User-Agennt': 'Vegout Project'
+    'User-Agent': 'Vegout Project'
   }
 })
 .then((res) => {
-  console.log(res.data.entries[4]);
   this.setState({
     results: res.data.entries
   })
+  this.priceFiltered(this.state.results, this.state.price)
+  console.log(this.state.filteredResults)
 })
+
 .catch(function(err){
       console.log(err)
   })
 }
 
-// YELP API CALL  ****************
-// callApi(){
-//   axios.get(`https://api.yelp.com/v3/businesses/search?categories=vegan,restaurants,vegetarian&latitude=${this.state.latitude}&longitude=${this.state.longitude}&open_now=${this.state.openNow}&price=${this.state.price}&limit=50&radius=30000`,
-//     {headers: {
-//     'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
-//   }
-// })
-//   .then((res) => {
-//     let veggieArray = [];
-//
-//     for (let i = 0; i < res.data.businesses.length; i++) {
-//       let categoriesArray = res.data.businesses[i].categories
-//         categoriesArray.map(category => {
-//           console.log(category.alias);
-//           if(category.alias === 'vegetarian' ||
-//           category.alias === 'vegan' ||
-//           category.alias === 'thai' ||
-//           category.alias === 'indian' ||
-//           category.alias === 'mediterranean' ||
-//           category.alias === 'asianfusion'
-//         ){
-//             veggieArray.push(res.data.businesses[i])
-//           }
-//         })
-//        }
-//       this.setState({ results: veggieArray})
-//   })
-//   .catch(function(err){
-//       console.log(err)
-//   })
-// }
-// *****************
 
 componentWillMount(){
   navigator.geolocation.getCurrentPosition(
@@ -163,7 +135,8 @@ componentWillMount(){
   }
 
   setPriceRange(index){
-    const values = ['1,2,3,4', '1', '2,3','4']
+    console.log(index);
+    const values = [ '$ - inexpensive', '$$ - average','$$$ - expensive', 'whatever']
   for ( let i =0; i <values.length; i++ ){
     if(index === i){
       this.setState({
@@ -173,8 +146,25 @@ componentWillMount(){
   }
 }
 
+priceFiltered(array, price){
+  let tempArray = []
+  for(elem of array){
+    if(price === 'whatever'){
+      tempArray.push(elem)
+    }
+    else if(elem.price_range === price){
+      tempArray.push(elem)
+    }
+  }
+  this.setState({
+    filteredResults: tempArray
+  })
+}
+
+
 renderRestaurantList(){
-  return this.state.results.map(result =>
+
+  return this.state.filteredResults.map(result =>
     <Card key={result.name}>
 
       <Clickable onPress={()=> Linking.openURL(result.website)}>
@@ -194,7 +184,7 @@ renderRestaurantList(){
                 <Text>{result.phone}</Text>
                 <Text style={{flexWrap: "wrap"}}>{result.veg_level_description}</Text>
                 <Text>{result.price_range}</Text>
-                <Text style={{flexWrap: "wrap"}}>{result.short_description}</Text>
+                <Text style={{flexWrap: "wrap"}} adjustsFontSizeToFit={true} >{result.short_description}</Text>
               </Clickable>
               </View>
             </CardSection>
@@ -236,44 +226,43 @@ renderRestaurantList(){
         <ScrollView>
           <View>
             <PickerIOS
-                      selectedValue={this.state.vegLevel}
-                      onValueChange={(value) => this.setState({vegLevel: value})}>
+                      selectedValue={this.state.filters}
+                      onValueChange={(value) => this.setState({filters: value})}>
 
                         <PickerItemIOS
-                          value={'5'}
-                          label={'Straight up Vegan'}
+                          value={'veg_level=5'}
+                          label={'Vegan'}
                         />
                         <PickerItemIOS
-                          value={'4'}
-                          label={'Vegan prefered.'}
+                          value={'veg_level=4;category_id=1;category_id=9'}
+                          label={'Vegetarian.'}
                         />
                         <PickerItemIOS
-                          value={'3'}
-                          label={'Vegetarian, at least'}
+                          value={'veg_level=2;category_id=1;category_id=9'}
+                          label={'Vegan-Friendly'}
                         />
                         <PickerItemIOS
-                          value={'2'}
-                          label={'Non-meat options'}
+                          value={'veg_level=1;category_id=1;category_id=9'}
+                          label={'Vegetarian-friendly'}
                         />
                         <PickerItemIOS
-                          value={1}
-                          label={'guacomole is vegan.'}
+                          value={'veg_level=1;category_id=6'}
+                          label={'I need a drink.'}
+                        />
+                        <PickerItemIOS
+                          value={'veg_level=2;category_id=2;category_id:7'}
+                          label={'Groceries'}
+                        />
+                        <PickerItemIOS
+                          value={'veg_level=2;category_id:5'}
+                          label={'Coffee/Tea/Juice'}
                         />
 
                     </PickerIOS>
          </View>
 
-
-
-
-          {/* <View style={{borderWidth: 1}}>
-            <Switch
-              onValueChange={(value) => this.setState({openNow: value})}
-              value={this.state.openNow} />
-            </View> */}
-
             <View style={{marginBottom: 10}}>
-              <SegmentedControlIOS tintColor="#ff0000" values={[ 'cheap $', 'reasonable $$','date night $$$', 'whatever']}
+              <SegmentedControlIOS style={{height: 30}} tintColor='green' values={[ 'cheap $', 'average $$','date night', 'whatever']}
                 selectedIndex={this.state.selectedIndex}
                 onChange={(event) => {
                   this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
@@ -281,8 +270,12 @@ renderRestaurantList(){
                 }} />
               </View>
 
-              <View style={{borderWidth: 1, height:30}}>
-                <Button onPress={this.callApi}>Reload</Button>
+              <View style={{borderWidth: 1, height:50, justifyContent: 'center', marginLeft:20, marginRight:20}}>
+                <Clickable  onPress={()=> this.callApi()}>
+                  <Text style={{textAlign:'center'}}>
+                  SEARCH
+                </Text>
+                </Clickable>
               </View>
 
               {this.renderRestaurantList()}

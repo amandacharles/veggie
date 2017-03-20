@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
+import { Text, NavigatorIOS, View, TouchableHighlight, Linking } from 'react-native';
 import { Card, Button, CardSection, Input, Spinner } from './common';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import axios from 'axios'
@@ -23,7 +23,8 @@ class TheMap extends Component {
             longitude: -122.434759
         },
         title: 'Placeholder',
-        description: 'description'
+        description: 'description',
+        url: 'www.google.com'
       }
     ],
   }
@@ -33,6 +34,7 @@ class TheMap extends Component {
   // this.callMyMarkers = this.callMyMarkers.bind(this);
   this.callApi = this.callApi.bind(this);
   this.componentDidMount = this.componentDidMount.bind(this);
+  // this.goWeb = this.goWeb.bind(this)
 
 }
 
@@ -53,7 +55,8 @@ componentWillMount(){
                   longitude: -122.434759
               },
               title: 'Placeholder',
-              description: 'description'
+              description: 'description',
+              url: 'www.google.com'
             }
           ],
         })
@@ -68,9 +71,9 @@ componentDidMount(){
 
 callApi(){
   setResults = [];
-  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=5`,
+  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=5;category_id=10`,
     {headers: {
-    'User-Agennt': 'Vegout Project'
+    'User-Agent': 'Vegout Project'
   }
 })
 .then((res) => {
@@ -88,7 +91,8 @@ callApi(){
                 longitude: res.data.businesses[0].coordinates.longitude
             },
             title: res.data.businesses[0].name,
-            description: res.data.businesses[0].categories[0].title
+            description: `${res.data.businesses[0].categories[0].title} ${res.data.businesses[0].categories[1].title}` ,
+            url: entry.website
           }
         )}
         this.setState({
@@ -122,8 +126,13 @@ callMyMarkers(){
 })
 }
 
+// goWeb(url){
+//   Linking.openURL(url)
+// }
+
   render() {
     return (
+
       <View style={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF'}}>
         <MapView style={{position: 'absolute',
@@ -135,6 +144,7 @@ callMyMarkers(){
           onRegionChange={this.state.onRegionChange}>
           {this.state.markers.map(marker => {
             return <MapView.Marker
+            onCalloutPress={()=> Linking.openURL(marker.url) }
             key={marker.title}
             coordinate={marker.latlng}
             title={marker.title}
