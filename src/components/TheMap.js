@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, NavigatorIOS, View, TouchableHighlight, Linking } from 'react-native';
+import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
 import { Card, Button, CardSection, Input, Spinner } from './common';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import axios from 'axios'
@@ -23,8 +23,7 @@ class TheMap extends Component {
             longitude: -122.434759
         },
         title: 'Placeholder',
-        description: 'description',
-        url: 'www.google.com'
+        description: 'description'
       }
     ],
   }
@@ -34,13 +33,13 @@ class TheMap extends Component {
   // this.callMyMarkers = this.callMyMarkers.bind(this);
   this.callApi = this.callApi.bind(this);
   this.componentDidMount = this.componentDidMount.bind(this);
-  // this.goWeb = this.goWeb.bind(this)
 
 }
 
 componentWillMount(){
   navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log(typeof position.coords.longitude);
         this.setState({
           region: {
             latitude: position.coords.latitude,
@@ -55,35 +54,39 @@ componentWillMount(){
                   longitude: -122.434759
               },
               title: 'Placeholder',
-              description: 'description',
-              url: 'www.google.com'
+              description: 'description'
             }
           ],
         })
       }
   )
-  this.callApi()
 }
 
 componentDidMount(){
+  this.callApi()
   // this.callMyMarkers()
 }
 
 callApi(){
   setResults = [];
-  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=5;category_id=10`,
+  console.log(this.state.region.latitude);
+  console.log(this.state.region.longitude);
+  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=5`,
     {headers: {
     'User-Agent': 'Vegout Project'
   }
 })
 .then((res) => {
   res.data.entries.map(entry => {
+    console.log(entry.name);
     axios.get(`https://api.yelp.com/v3/businesses/search?term=${entry.name}&latitude=${this.state.region.latitude}&longitude=${this.state.region.longitude}&limit=1&radius=30000`,
         {headers: {
         'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
       }
     })
       .then((res) => {
+        console.log(this.state.region.latitude);
+        console.log(this.state.region.longitude);
         if(res.data.businesses[0].coordinates.latitude && res.data.businesses[0].coordinates.longitude){
         setResults.push({
             latlng: {
@@ -91,8 +94,7 @@ callApi(){
                 longitude: res.data.businesses[0].coordinates.longitude
             },
             title: res.data.businesses[0].name,
-            description: `${res.data.businesses[0].categories[0].title} ${res.data.businesses[0].categories[1].title}` ,
-            url: entry.website
+            description: res.data.businesses[0].categories[0].title
           }
         )}
         this.setState({
@@ -126,13 +128,8 @@ callMyMarkers(){
 })
 }
 
-// goWeb(url){
-//   Linking.openURL(url)
-// }
-
   render() {
     return (
-
       <View style={{flex: 1}}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF'}}>
         <MapView style={{position: 'absolute',
@@ -144,7 +141,6 @@ callMyMarkers(){
           onRegionChange={this.state.onRegionChange}>
           {this.state.markers.map(marker => {
             return <MapView.Marker
-            onCalloutPress={()=> Linking.openURL(marker.url) }
             key={marker.title}
             coordinate={marker.latlng}
             title={marker.title}
