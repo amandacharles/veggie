@@ -16,6 +16,7 @@ const Clickable = ({ onPress, children }) => {
 
   const styles = {
     buttonStyle: {
+      
     }
   }
 

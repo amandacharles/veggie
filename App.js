@@ -4,15 +4,13 @@ import LoginForm from './src/components/LoginForm';
 import Main from './src/components/Main'
 import * as firebase from "firebase";
 
-
-
 export default class App extends React.Component {
   render() {
     return (
       <NavigatorIOS
         initialRoute={{
           component: Main,
-          title: 'VegOut',
+          title: 'Tofudi',
         }}
         style={{flex: 1}}
       />

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, NavigatorIOS, View, TouchableHighlight } from 'react-native';
+import { Text, NavigatorIOS, View, TouchableHighlight, Image } from 'react-native';
 import { Button, Card, CardSection } from './common';
 import LoginForm from './LoginForm';
 import ListView from './ListView';
@@ -43,12 +43,12 @@ class Main extends Component {
   render() {
     const ListViewRoute = {
       component: ListView,
-      title: 'ListView',
+      title: 'Search',
       // passProps: { myProp: 'bar' }
     };
     const MapViewRoute = {
       component: TheMap,
-      title: "The Map"
+      title: "Map"
     }
     const FavoritesRoute = {
       component: Favorites,
@@ -56,24 +56,23 @@ class Main extends Component {
     }
 
     return(
-      <View style={{flex:1, justifyContent: 'center'}}>
+      <Image source={require('./gheart.png')} style={{flex:1, resizeMode: 'contain',  justifyContent: 'center', width: null, height: null}}>
         <View>
       { (this.state.loggedIn) ?
          ( <View style={styles.buttonContainer}>
+           <TouchableHighlight
+             onPress={() => this._handleNextPress(ListViewRoute)}
+             style={styles.mainButtonStyle}>
+             <Text style={styles.textStyle}>
+               Search
+             </Text>
+           </TouchableHighlight>
            <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
              style={styles.mainButtonStyle}>
              <Text style={styles.textStyle}>
                Map
              </Text>
            </TouchableHighlight>
-           <TouchableHighlight
-             onPress={() => this._handleNextPress(ListViewRoute)}
-             style={styles.mainButtonStyle}>
-           <Text style={styles.textStyle}>
-             List
-           </Text>
-         </TouchableHighlight>
-
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}
            style={styles.mainButtonStyle}>
@@ -91,7 +90,7 @@ class Main extends Component {
       )
     }
   </View>
-    </View>
+</Image>
     );
   }
 }

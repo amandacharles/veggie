@@ -97,8 +97,6 @@ deleteFav(fav){
 
   favesRef.child(`${fav.key}`).remove();
 
-
-
   let index = this.state.snaps.indexOf(fav)
   const newArr = [...this.state.snaps]
   newArr.splice(index, 1)

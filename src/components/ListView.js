@@ -17,10 +17,12 @@ const styles = {
       fontSize: 18
     },
     thumbNailStyle: {
-      height: 50,
-      width: 50,
+      height: 30,
+      width: 30,
       flexDirection: 'column',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
+      marginBottom:3,
+      paddingBottom:1
     },
     thumbNailContainerStyle: {
       justifyContent: 'center',
@@ -29,11 +31,13 @@ const styles = {
       marginRight: 10,
       padding: 1
 
+
     },
     imageStyle: {
       height: 300,
       flex: 1,
       width: null
+
     },
   }
 
@@ -55,9 +59,9 @@ class ListView extends Component {
     latitude: 47.6062,
     longitude: 122.3321,
     openNow: true,
-    price: '$$$ - expensive',
+    price: 'whatever',
     values: ['One', 'Two', 'Three'],
-    selectedIndex: 0,
+    selectedIndex: 3,
     results: [],
     FavoritesRoute: {
       component: Favorites,
@@ -178,9 +182,9 @@ renderRestaurantList(){
         </View>
       </Clickable>
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', flex:.9}}>
 
-        <View style={{flexDirection:"row", justifyContent: "flex-start"}}>
+        <View style={{flexDirection:"row", justifyContent: "flex-start", flex:.9}}>
             <CardSection>
               <View style={headerContentStyle}>
                 <Clickable onPress={()=> Linking.openURL(result.website)}>
@@ -193,12 +197,12 @@ renderRestaurantList(){
             </CardSection>
         </View>
 
-<View style={{flexDirection:"column", justifyContent: "flex-end"}}>
-        <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}} onPress={()=>this.sendToDatabase(result.name, result.short_description,result.price_range, result.veg_level_description, result.phone, result.website, result.postal_code, result.veg_level)}>
-        <View style={{ flexDirection: 'column', justifyContent: 'flex-end'}}>
+<View style={{flexDirection:"column", justifyContent: "flex-end", marginRight:2, marginBottom: 10, paddingRight: 6}}>
+        <Clickable  style={{  alignSelf: 'center', lexDirection: 'row', justifyContent: 'flex-end'}} onPress={()=>this.sendToDatabase(result.name, result.short_description,result.price_range, result.veg_level_description, result.phone, result.website, result.postal_code, result.veg_level)}>
+        <View style={{ flexDirection: 'column', justifyContent: 'flex-end', marginBottom:3}}>
             <Image
               style={thumbNailStyle}
-              source={require('./carrot.jpg')}/>
+              source={require('./gheart.png')}/>
           </View>
         </Clickable>
       </View>
@@ -232,6 +236,14 @@ renderRestaurantList(){
                       selectedValue={this.state.filters}
                       onValueChange={(value) => this.setState({filters: value})}>
 
+                      <PickerItemIOS
+                        value={'veg_level=1;category_id=6'}
+                        label={'I need a drink.'}
+                      />
+                        <PickerItemIOS
+                          value={'veg_level=2;category_id=1;category_id=9'}
+                          label={'Vegan-Friendly'}
+                        />
                         <PickerItemIOS
                           value={'veg_level=5'}
                           label={'Vegan'}
@@ -241,17 +253,10 @@ renderRestaurantList(){
                           label={'Vegetarian.'}
                         />
                         <PickerItemIOS
-                          value={'veg_level=2;category_id=1;category_id=9'}
-                          label={'Vegan-Friendly'}
-                        />
-                        <PickerItemIOS
                           value={'veg_level=1;category_id=1;category_id=9'}
                           label={'Vegetarian-friendly'}
                         />
-                        <PickerItemIOS
-                          value={'veg_level=1;category_id=6'}
-                          label={'I need a drink.'}
-                        />
+
                         <PickerItemIOS
                           value={'veg_level=2;category_id=2;category_id:7'}
                           label={'Groceries'}
@@ -273,7 +278,7 @@ renderRestaurantList(){
                 }} />
               </View>
 
-              <View style={{borderWidth: 1, height:50, justifyContent: 'center', marginLeft:20, marginRight:20}}>
+              <View style={{ borderWidth: 2, height:50, justifyContent: 'center', marginLeft:20, marginRight:20}}>
                 <Clickable  onPress={()=> this.callApi()}>
                   <Text style={{textAlign:'center'}}>
                   SEARCH
