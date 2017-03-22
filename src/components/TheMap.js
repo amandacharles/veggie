@@ -97,7 +97,6 @@ callApi(){
       }
     })
       .then((res) => {
-        console.log(level);
         if(res.data.businesses[0].coordinates.latitude && res.data.businesses[0].coordinates.longitude){
         setResults.push({
             latlng: {
@@ -174,7 +173,6 @@ _handleNextPress(restaurantRoute) {
           region={this.state.region}
           onRegionChange={this.state.onRegionChange}>
           {this.state.markers.map(marker => {
-            console.log(marker);
             return <MapView.Marker
             key={marker.title}
             coordinate={marker.latlng}>
@@ -192,9 +190,13 @@ _handleNextPress(restaurantRoute) {
                           website: marker.website
                          }
             })}>
-          <View>
-            <Text>
+          <View style={{flexDirection: 'column',
+          justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontWeight:'bold'}}>
               {marker.title}
+            </Text>
+            <Text>
+              {marker.price}
             </Text>
             <Text>
               {marker.category}
@@ -211,5 +213,12 @@ _handleNextPress(restaurantRoute) {
   }
 }
 
+const styles = {
+  infoContainer: {
+    flex: 1,
+    position: 'relative'
+
+  }
+}
 
 export default TheMap;
