@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, NavigatorIOS, View, TouchableHighlight, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Text, NavigatorIOS, View, TouchableHighlight, TouchableOpacity, Image, ScrollView, Linking } from 'react-native';
 import { Button, Card, CardSection, Input, Spinner } from './common';
 import axios from 'axios'
+import * as firebase from "firebase";
+import Favorites from './Favorites'
 
 
 class Restaurant extends Component {
@@ -14,7 +16,11 @@ class Restaurant extends Component {
       yelpRating: '',
       yelpSite: '',
       yelpID: '',
-      reviews: []
+      reviews: [],
+      FavoritesRoute: {
+        component: Favorites,
+        title: "Favorites"
+      }
     }
 
     this.callApi = this.callApi.bind(this);
@@ -82,14 +88,53 @@ reviewsRender(){
       {this.state.reviews.map(review => {
         console.log(review);
       return <View style={styles.reviewContainer}>
-        <Text>{review}</Text>
+        <Text style={{fontSize: 20}}>{review}</Text>
       </View>
       })}
     </View>
   )
 }
 
+sendToDatabase(
+  name,
+  short_d,
+  price,
+  veg_level,
+  phone,
+  website,
+  yelpSite,
+  yelpRating,
+  image,
+  yelpID,
+  reviews) {
+  const userId = firebase.auth().currentUser.uid;
+  var database = firebase.database();
+  var newFavKey = firebase.database().ref().child('favorites').push().key;
 
+ firebase.database().ref('favorites/').push({
+   name: name,
+   short_description: short_d,
+   price_range: price,
+   veg_level_description: veg_level,
+   phone: phone,
+   website: website,
+   yelpURL: yelpSite,
+   yelpRating: yelpRating,
+   imageURL: image,
+   yelpID: yelpID,
+   reviews: reviews,
+   key: newFavKey
+ })
+ this._handleNextPress(this.state.FavoritesRoute)
+}
+
+_handleBackPress() {
+  this.props.navigator.pop();
+}
+
+_handleNextPress(nextRoute) {
+  this.props.navigator.push(nextRoute);
+}
 
   render() {
     // console.log(this.state.reviews);
@@ -99,7 +144,21 @@ reviewsRender(){
 
       <View style={styles.topContainer}>
         <View><Text style={styles.nameText}>{this.props.name}</Text></View>
+        <TouchableHighlight
+          onPress={()=>this.sendToDatabase(
+            this.props.name,
+            this.props.short_d,
+            this.props.price,
+            this.props.veg_level,
+            this.state.phone,
+            this.props.website,
+            this.state.yelpSite,
+            this.state.yelpRating,
+            this.state.image,
+            this.state.yelpID,
+            this.state.reviews)}>
         <Image style={styles.heartImage} source={require('./gheart.png')}/>
+      </TouchableHighlight>
       </View>
 
 
@@ -107,21 +166,25 @@ reviewsRender(){
       <Text style={styles.infoText}>{this.props.veg_level}</Text>
       <Text style={styles.infoText}>{this.props.price}</Text>
       <Text style={styles.infoText}>{this.state.phone}</Text>
-      <Text style={styles.infoText} style={{fontSize: 20}}>{this.props.long_d['text/vnd.vegguide.org-wikitext']}</Text>
+      <Text style={styles.infoText}>{this.props.long_d['text/vnd.vegguide.org-wikitext']}</Text>
     </View>
 
     <Image style={styles.yelpImage} source={{uri: this.state.image}}/>
 
     <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.buttons}>
+      <TouchableOpacity onPress={()=> Linking.openURL(this.state.yelpSite)} style={styles.buttons}>
         <Text>YELP</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buttons}>
         <Text>WEBSITE</Text>
       </TouchableOpacity>
     </View>
-    {this.reviewsRender()}
 
+    <View style={{flexDirection: 'row', justifyContent: 'center', margin: 7}}>
+      <Text style={{fontSize: 20, textDecorationLine: 'underline'}}>Reviews</Text>
+    </View>
+
+    {this.reviewsRender()}
   </View>
 </ScrollView>
     );
@@ -130,7 +193,8 @@ reviewsRender(){
 
 const styles = {
   nameText: {
-    fontSize: 30
+    fontSize: 30,
+
   },
   heartImage: {
     height: 30,
@@ -145,6 +209,16 @@ const styles = {
   buttons: {
     height: 30,
     justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 2,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop:5
+  },
+  buttonText: {
+
   },
   topContainer: {
     flexDirection: 'row',
@@ -160,19 +234,21 @@ const styles = {
     justifyContent: 'space-around'
   },
   infoText: {
-    marginBottom: 3
+    marginBottom: 3,
+    fontSize: 15
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 7,
+    marginTop: 10,
     marginBottom: 5,
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+
   },
   reviewsContainer: {
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
   },
   reviewContainer: {
     marginBottom: 5,

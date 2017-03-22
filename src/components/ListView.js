@@ -56,8 +56,10 @@ class ListView extends Component {
     super(props)
 
   this.state = {
-    latitude: 47.6062,
-    longitude: 122.3321,
+    latlng: {
+      latitude: 47.6062,
+      longitude: 122.3321
+    },
     openNow: true,
     price: 'whatever',
     values: ['One', 'Two', 'Three'],
@@ -77,29 +79,29 @@ class ListView extends Component {
   this.callApi = this.callApi.bind(this);
   this._handleBackPress = this._handleBackPress.bind(this);
   this._handleNextPress = this._handleNextPress.bind(this);
-  this.sendToDatabase = this.sendToDatabase.bind(this);
+  // this.sendToDatabase = this.sendToDatabase.bind(this);
   this.priceFiltered = this.priceFiltered.bind(this);
 }
 
-sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
-  const userId = firebase.auth().currentUser.uid;
-  var database = firebase.database();
-  var newFavKey = firebase.database().ref().child('favorites').push().key;
-
-
- firebase.database().ref('favorites/').push({
-   name: name,
-   short_description: short_description,
-   price_range: price_range,
-   veg_level_description: veg_level_description,
-   phone: phone,
-   website: website,
-   postal_code: postal_code,
-   veg_level: veg_level,
-   key: newFavKey
- })
- this._handleNextPress(this.state.FavoritesRoute)
-}
+// sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
+//   const userId = firebase.auth().currentUser.uid;
+//   var database = firebase.database();
+//   var newFavKey = firebase.database().ref().child('favorites').push().key;
+//
+//
+//  firebase.database().ref('favorites/').push({
+//    name: name,
+//    short_description: short_description,
+//    price_range: price_range,
+//    veg_level_description: veg_level_description,
+//    phone: phone,
+//    website: website,
+//    postal_code: postal_code,
+//    veg_level: veg_level,
+//    key: newFavKey
+//  })
+//  this._handleNextPress(this.state.FavoritesRoute)
+// }
 
 callApi(){
   axios.get(`http://www.vegguide.org/search/by-lat-long/47.6195700,-122.3212680/filter/distance=20;${this.state.filters}`,
@@ -114,19 +116,19 @@ callApi(){
   this.priceFiltered(this.state.results, this.state.price)
   console.log(this.state.filteredResults)
 })
-
 .catch(function(err){
       console.log(err)
   })
 }
 
-
 componentWillMount(){
   navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+          latlng: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          }
         })
       }
   )
@@ -171,6 +173,7 @@ priceFiltered(array, price){
 
 renderRestaurantList(){
 
+  console.log(this.state.filteredResults[0]);
   return this.state.filteredResults.map(result =>
     <Card key={result.name}>
 
@@ -187,7 +190,19 @@ renderRestaurantList(){
         <View style={{flexDirection:"row", justifyContent: "flex-start", flex:.9}}>
             <CardSection>
               <View style={headerContentStyle}>
-                <Clickable onPress={()=> Linking.openURL(result.website)}>
+                <Clickable onPress={() => this._handleNextPress({
+                  component: Restaurant,
+                  title: 'Restaurant',
+                  passProps: { name: result.name,
+                              category: "category",
+                              latlng: this.state.latlng,
+                              veg_level: result.veg_level_description,
+                              long_d: result.long_description,
+                              short_d: result.short_description,
+                              price: result.price_range,
+                              website: result.website
+                             }
+                })}>
                 <Text>{result.phone}</Text>
                 <Text style={{flexWrap: "wrap"}}>{result.veg_level_description}</Text>
                 <Text>{result.price_range}</Text>

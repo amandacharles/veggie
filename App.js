@@ -3,6 +3,7 @@ import { Text, View, NavigatorIOS } from 'react-native';
 import LoginForm from './src/components/LoginForm';
 import Main from './src/components/Main'
 import * as firebase from "firebase";
+console.disableYellowBox = true;
 
 export default class App extends React.Component {
   render() {
