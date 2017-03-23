@@ -89,13 +89,13 @@ reviewsRender(){
       {this.state.reviews.map(review => {
         console.log(review);
       return <TouchableHighlight onPress={()=> Linking.openURL(review.reviewURL)}>
-        <Card>
-          <CardSection>
+        {/* <Card>
+          <CardSection> */}
       <View style={styles.reviewContainer}>
         <Text style={{fontSize: 20}}>{review.text}</Text>
       </View>
-    </CardSection>
-    </Card>
+    {/* </CardSection>
+    </Card> */}
     </TouchableHighlight>
       })}
     </View>

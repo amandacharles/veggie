@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight, ListView, Image, ScrollView, Linking} from 'react-native';
 import { Button, CardSection, Input, Spinner, Card, Clickable } from './common';
 import * as firebase from 'firebase';
+import vegQuoteArray from './vquotes.js'
 
 const styles = {
     headerContentStyle: {
@@ -153,8 +154,13 @@ renderFavorite(snap) {
   render() {
     console.log(this.state.snaps);
     return (
-      <View style={{flex: 1, justifyContent: 'center', borderWidth: 5}}>
+      <View style={{flex: 1, justifyContent: 'center'}}>
       <ScrollView>
+        {vegQuoteArray.map(quote => {
+          return <View style={{height: 30, flexDirection: 'row', justifyContent: 'center'}}>
+            <Text>{quote}</Text>
+          </View>
+        })}
           {this.state.snaps.map(this.renderFavorite)}
       </ScrollView>
     </View>
