@@ -114,11 +114,11 @@ sendToDatabase(
   image,
   yelpID,
   reviews) {
-  const userId = firebase.auth().currentUser.uid;
   var database = firebase.database();
+  const userId = firebase.auth().currentUser.uid;
   var newFavKey = firebase.database().ref().child('favorites').push().key;
 
- firebase.database().ref('favorites/').push({
+ firebase.database().ref('/users/' + userId + '/favorites/').push({
    name: name,
    short_description: short_d,
    price_range: price,

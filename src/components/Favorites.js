@@ -52,12 +52,15 @@ class Favorites extends Component {
     // this.showFavorites = this.showFavorites.bind(this)
     this.renderFavorite = this.renderFavorite.bind(this)
     this.deleteFav = this.deleteFav.bind(this)
+    this.randomQuote = this.randomQuote.bind(this);
   }
 
   componentWillMount(){
     const self = this;
     const database = firebase.database();
-    itemsRef = database.ref('favorites');
+    const userId = firebase.auth().currentUser.uid;
+
+    itemsRef = database.ref('/users/' + userId + '/favorites/');
     let snapArray = [];
 
     itemsRef.on('value', (snap) => {
@@ -90,15 +93,17 @@ class Favorites extends Component {
 //
 // }
 
-deleteFav(fav){
+deleteFav(snap){
   const self = this;
 
   const database = firebase.database();
-  favesRef = database.ref('favorites');
+  const userId = firebase.auth().currentUser.uid;
 
-  favesRef.child(`${fav.key}`).remove();
+  favesRef = database.ref('/users/' + userId + '/favorites/');
 
-  let index = this.state.snaps.indexOf(fav)
+  favesRef.child(snap.key).remove();
+
+  let index = this.state.snaps.indexOf(snap.val())
   const newArr = [...this.state.snaps]
   newArr.splice(index, 1)
 
@@ -150,17 +155,24 @@ renderFavorite(snap) {
       )
 }
 
+randomQuote(){
+  let random = vegQuoteArray[Math.floor(Math.random() * vegQuoteArray.length)];
+
+  return (
+    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+      <Text>{random}</Text>
+    </View>
+  )
+
+}
+
 
   render() {
     console.log(this.state.snaps);
     return (
       <View style={{flex: 1, justifyContent: 'center'}}>
       <ScrollView>
-        {vegQuoteArray.map(quote => {
-          return <View style={{height: 30, flexDirection: 'row', justifyContent: 'center'}}>
-            <Text>{quote}</Text>
-          </View>
-        })}
+        {this.randomQuote()}
           {this.state.snaps.map(this.renderFavorite)}
       </ScrollView>
     </View>
