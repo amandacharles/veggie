@@ -44,7 +44,7 @@ axios.get(`https://api.yelp.com/v3/businesses/search?term=${this.props.name}&lat
       }
     })
   .then((res) => {
-    // console.log(res.data.businesses[0])
+    console.log(res.data.businesses[0])
     this.setState({
       phone: res.data.businesses[0].display_phone,
       image: res.data.businesses[0].image_url,
@@ -54,17 +54,18 @@ axios.get(`https://api.yelp.com/v3/businesses/search?term=${this.props.name}&lat
     })
       })
     .then((res) => {
-      console.log(this.state.image);
+      // console.log(this.state.image);
       axios.get(`https://api.yelp.com/v3/businesses/${this.state.yelpID}/reviews`,
               {headers: {
               'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
             }
           })
           .then((response) => {
+            console.log(response.data);
             let reviewArr = []
             response.data.reviews.map(review => {
               if(review.text){
-                reviewArr.push(review.text)
+                reviewArr.push({text: review.text, reviewURL: review.url})
               }
             })
             this.setState({
@@ -87,9 +88,15 @@ reviewsRender(){
     <View style={styles.reviewsContainer}>
       {this.state.reviews.map(review => {
         console.log(review);
-      return <View style={styles.reviewContainer}>
-        <Text style={{fontSize: 20}}>{review}</Text>
+      return <TouchableHighlight onPress={()=> Linking.openURL(review.reviewURL)}>
+        <Card>
+          <CardSection>
+      <View style={styles.reviewContainer}>
+        <Text style={{fontSize: 20}}>{review.text}</Text>
       </View>
+    </CardSection>
+    </Card>
+    </TouchableHighlight>
       })}
     </View>
   )
@@ -137,7 +144,7 @@ _handleNextPress(nextRoute) {
 }
 
   render() {
-    // console.log(this.state.reviews);
+    console.log(this.state.reviews);
     return(
       <ScrollView>
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', marginLeft: 5, marginRight: 5 }}>
@@ -175,7 +182,7 @@ _handleNextPress(nextRoute) {
       <TouchableOpacity onPress={()=> Linking.openURL(this.state.yelpSite)} style={styles.buttons}>
         <Text>YELP</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttons}>
+      <TouchableOpacity onPress={()=> Linking.openURL(this.props.website)} style={styles.buttons}>
         <Text>WEBSITE</Text>
       </TouchableOpacity>
     </View>
@@ -249,11 +256,13 @@ const styles = {
   reviewsContainer: {
     marginLeft: 5,
     marginRight: 5,
+    justifyContent: 'center'
   },
   reviewContainer: {
     marginBottom: 5,
     marginLeft: 5,
-    marginRight: 5
+    marginRight: 5,
+    flex: 1,
   }
 }
 

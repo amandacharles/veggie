@@ -70,7 +70,9 @@ class ListView extends Component {
       title: "Favorites"
     },
     filters: 'veg_level=5',
-    filteredResults: []
+    filteredResults: [],
+    searched: false,
+    picUrls: []
   }
 
   // this.setPriceRange = this.setPriceRange.bind(this);
@@ -81,6 +83,7 @@ class ListView extends Component {
   this._handleNextPress = this._handleNextPress.bind(this);
   // this.sendToDatabase = this.sendToDatabase.bind(this);
   this.priceFiltered = this.priceFiltered.bind(this);
+  this.getAnimalPic = this.getAnimalPic.bind(this);
 }
 
 // sendToDatabase(name, short_description, price_range, veg_level_description, phone, website, postal_code, veg_level) {
@@ -119,9 +122,13 @@ callApi(){
 .catch(function(err){
       console.log(err)
   })
+  this.setState({
+    searched: true
+  })
 }
 
 componentWillMount(){
+  this.getAnimalPic()
   navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
@@ -132,7 +139,8 @@ componentWillMount(){
         })
       }
   )
-  this.callApi()
+
+  // this.callApi()
 }
 
   _handleBackPress() {
@@ -172,42 +180,36 @@ priceFiltered(array, price){
 
 
 renderRestaurantList(){
-
-  console.log(this.state.filteredResults[0]);
   return this.state.filteredResults.map(result =>
+    <Clickable onPress={() => this._handleNextPress({
+      component: Restaurant,
+      title: 'Restaurant',
+      passProps: { name: result.name,
+                  category: "category",
+                  latlng: this.state.latlng,
+                  veg_level: result.veg_level_description,
+                  long_d: result.long_description,
+                  short_d: result.short_description,
+                  price: result.price_range,
+                  website: result.website
+                 }
+    })}>
     <Card key={result.name}>
-
-      <Clickable onPress={()=> Linking.openURL(result.website)}>
         <View style={thumbNailContainerStyle}>
           <View >
             <Text style={headerTextStyle}>{ result.name }</Text>
           </View>
         </View>
-      </Clickable>
-
       <View style={{flexDirection: 'row', justifyContent: 'space-between', flex:.9}}>
 
         <View style={{flexDirection:"row", justifyContent: "flex-start", flex:.9}}>
             <CardSection>
               <View style={headerContentStyle}>
-                <Clickable onPress={() => this._handleNextPress({
-                  component: Restaurant,
-                  title: 'Restaurant',
-                  passProps: { name: result.name,
-                              category: "category",
-                              latlng: this.state.latlng,
-                              veg_level: result.veg_level_description,
-                              long_d: result.long_description,
-                              short_d: result.short_description,
-                              price: result.price_range,
-                              website: result.website
-                             }
-                })}>
+
                 <Text>{result.phone}</Text>
                 <Text style={{flexWrap: "wrap"}}>{result.veg_level_description}</Text>
                 <Text>{result.price_range}</Text>
                 <Text style={{flexWrap: "wrap"}} adjustsFontSizeToFit={true} >{result.short_description}</Text>
-              </Clickable>
               </View>
             </CardSection>
         </View>
@@ -215,16 +217,34 @@ renderRestaurantList(){
 <View style={{flexDirection:"column", justifyContent: "flex-end", marginRight:2, marginBottom: 10, paddingRight: 6}}>
         <Clickable  style={{  alignSelf: 'center', lexDirection: 'row', justifyContent: 'flex-end'}} onPress={()=>this.sendToDatabase(result.name, result.short_description,result.price_range, result.veg_level_description, result.phone, result.website, result.postal_code, result.veg_level)}>
         <View style={{ flexDirection: 'column', justifyContent: 'flex-end', marginBottom:3}}>
-            <Image
+            {/* <Image
               style={thumbNailStyle}
-              source={require('./gheart.png')}/>
+              source={require('./gheart.png')}/> */}
           </View>
         </Clickable>
       </View>
         </View>
       </Card>
+    </Clickable>
     )
   }
+
+getAnimalPic(){
+  axios.get('https://pixabay.com/api/?key=4896856-980590af9924c6287e175646d&q=farm+animal&image_type=photo')
+  .then((res) => {
+    this.setState({
+      picUrls: res.data.hits
+    })
+  })
+  .catch(function(err){
+        console.log(err)
+    })
+
+      return (
+        <Image source={{uri: 'https://pixabay.com/get/e834b00b2af2063ed95c4518b7484e9fe57fe7d304b0154895f2c27ea5e9b1_640.jpg%22,'}} style={{height: 300, resizeMode: 'contain',  justifyContent: 'center'}}/>
+      )
+}
+
 
 /* <View style={{flexDirection: 'row', justifyContent: "space-between"}}>
         <CardSection>
@@ -242,14 +262,12 @@ renderRestaurantList(){
     </Clickable> */
 
   render() {
-
     return(
       <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-        <ScrollView>
           <View>
             <PickerIOS
                       selectedValue={this.state.filters}
-                      onValueChange={(value) => this.setState({filters: value})}>
+                      onValueChange={(value) => this.setState({filters: value, searched: false})}>
 
                       <PickerItemIOS
                         value={'veg_level=1;category_id=6'}
@@ -288,7 +306,8 @@ renderRestaurantList(){
               <SegmentedControlIOS style={{height: 30}} tintColor='green' values={[ 'cheap $', 'average $$','date night', 'whatever']}
                 selectedIndex={this.state.selectedIndex}
                 onChange={(event) => {
-                  this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex })
+                  this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex,
+                  searched: false })
                   this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
                 }} />
               </View>
@@ -301,8 +320,21 @@ renderRestaurantList(){
                 </Clickable>
               </View>
 
+        { (this.state.searched) ?
+          (
+            <ScrollView>
               {this.renderRestaurantList()}
             </ScrollView>
+          )
+          : (
+
+            <View>
+              {
+              this.getAnimalPic()
+              }
+            </View>
+          )
+        }
           </View>
     );
   }

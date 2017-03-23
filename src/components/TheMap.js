@@ -97,6 +97,7 @@ callApi(){
       }
     })
       .then((res) => {
+        console.log(res.data);
         if(res.data.businesses[0].coordinates.latitude && res.data.businesses[0].coordinates.longitude){
         setResults.push({
             latlng: {
