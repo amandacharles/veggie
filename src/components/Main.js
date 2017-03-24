@@ -10,7 +10,8 @@ import * as firebase from "firebase";
 
 
 class Main extends Component {
-  state = {
+
+    state = {
       loggedIn: null
     };
 
@@ -32,6 +33,10 @@ class Main extends Component {
       });
     }
 
+    _handleNavigationRequest(){
+
+    }
+
   _handleBackPress() {
     this.props.navigator.pop();
   }
@@ -44,45 +49,85 @@ class Main extends Component {
     const ListViewRoute = {
       component: ListView,
       title: 'Search',
-      // passProps: { myProp: 'bar' }
+      tintColor: '#f74509',
+
     };
     const MapViewRoute = {
       component: TheMap,
-      title: "Map"
+      title: "Map",
+      tintColor: '#f74509'
     }
     const FavoritesRoute = {
       component: Favorites,
-      title: 'Favorites'
+      title: 'Favorites',
+      tintColor: '#f74509'
+
     }
 
     return(
-      <Image source={require('./gheart.png')} style={{flex:1, resizeMode: 'contain',  justifyContent: 'center', width: null, height: null}}>
+      <Image source={require('./tofudiMan.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'contain', width: null, height: null}}>
         <View>
       { (this.state.loggedIn) ?
-         ( <View style={styles.buttonContainer}>
-           <TouchableHighlight
-             onPress={() => this._handleNextPress(ListViewRoute)}
-             style={styles.mainButtonStyle}>
-             <Text style={styles.textStyle}>
-               Search
+         ( <View>
+
+
+           {/* <View >
+  <View style={{height: 50 ,marginBottom: 10, marginRight: 30, marginLeft: 30}}>
+    <Button onPress={() => this._handleNextPress(MapViewRoute)}>
+      <Text>
+        MAP
+      </Text>
+    </Button>
+  </View>
+
+  <View style={{height: 50 ,marginBottom: 10, marginRight: 30, marginLeft: 30}}>
+  <Button onPress={() => this._handleNextPress(ListViewRoute)}>
+    <Text>
+      SEARCH
+    </Text>
+  </Button>
+</View>
+<View style={{height: 50, marginBottom: 10, marginRight: 30, marginLeft: 30}}>
+<Button onPress={() => this._handleNextPress(FavoritesRoute)}>
+  <Text>
+    FAVORITES
+  </Text>
+</Button>
+</View>
+</View> */}
+
+           <View>
+             <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
+             style={{height: 90, backgroundColor: '#4d067a', justifyContent: 'center'}}>
+             <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
+               Map
              </Text>
            </TouchableHighlight>
-           <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-             style={styles.mainButtonStyle}>
-             <Text style={styles.textStyle}>
-               Map
+             <TouchableHighlight onPress={() => this._handleNextPress(ListViewRoute)}
+             style={{height: 90, backgroundColor: '#f74509', justifyContent: 'center'}}>
+             <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
+               Search
              </Text>
            </TouchableHighlight>
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}
-           style={styles.mainButtonStyle}>
-           <Text style={styles.textStyle}>
+           style={{height: 70, backgroundColor: 'darkgreen', justifyContent: 'center'}}>
+           <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
              Favorites
            </Text>
          </TouchableHighlight>
+       </View>
 
-       </View>)
+<View style={{alignSelf: 'stretch', alignItems: 'flex-end', backgroundColor: 'darkgreen'}}>
+  <TouchableHighlight onPress={() => this.setState({ loggedIn: null})}>
+    <Text style={{color: 'white', textAlign: 'flex-end', marginBottom: 8, marginRight: 20}}>
+      LogOut
+    </Text>
+  </TouchableHighlight>
+</View>
+</View>
 
+     )
       : (
         <View  >
         <LoginForm style={{justifyContent: 'center'}}/>
@@ -97,20 +142,15 @@ class Main extends Component {
 
 const styles = {
   mainButtonStyle: {
-    height: 100,
+    height: 50,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: 'black',
     justifyContent: 'center',
     marginBottom: 5,
-    marginRight:5,
-    marginLeft: 5,
+    marginRight:35,
+    marginLeft: 35,
 
-  },
-  buttonContainer: {
-    flex: 1,
-    height: 30,
-    justifyContent: 'space-between',
   },
   textStyle: {
     alignSelf: 'center',

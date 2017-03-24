@@ -37,7 +37,6 @@ class LoginForm extends Component {
     if (this.state.loading) {
       return <Spinner size="small" />;
     }
-
     return (
       <Button onPress={this.onButtonPress.bind(this)}>
         Log in
@@ -47,10 +46,9 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <View style={{justifyContent: 'center'}}>
-      <View style={{justifyContent: 'center'}}>
+      <View style={{marginTop: 40, justifyContent: 'center', marginBottom: 70}}>
         <TextInput/>
-      <Card >
+      <Card>
         <CardSection>
 
           <Input
@@ -80,7 +78,7 @@ class LoginForm extends Component {
         </CardSection>
       </Card>
     </View>
-  </View>
+
     );
   }
 }

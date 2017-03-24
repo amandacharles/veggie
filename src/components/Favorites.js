@@ -53,6 +53,7 @@ class Favorites extends Component {
     this.renderFavorite = this.renderFavorite.bind(this)
     this.deleteFav = this.deleteFav.bind(this)
     this.randomQuote = this.randomQuote.bind(this);
+    this.noFavorites = this.noFavorites.bind(this);
   }
 
   componentWillMount(){
@@ -99,11 +100,12 @@ deleteFav(snap){
   const database = firebase.database();
   const userId = firebase.auth().currentUser.uid;
 
-  favesRef = database.ref('/users/' + userId + '/favorites/');
+  favesRef = database.ref('/users/' + userId + '/favorites/' + snap.key);
 
-  favesRef.child(snap.key).remove();
+  favesRef.remove();
 
   let index = this.state.snaps.indexOf(snap.val())
+  console.log(snap.val());
   const newArr = [...this.state.snaps]
   newArr.splice(index, 1)
 
@@ -112,7 +114,23 @@ deleteFav(snap){
   })
 }
 
+noFavorites(){
+  if(!this.state.snaps.length){
+    return (
+      <View style={{justifyContent: 'center', marginTop:50}}>
+        <Text style={{textAlign: 'center', fontSize: 30}}>
+          You haven't added any favorites.
+        </Text>
+      </View>
+    )
+  }
+}
+
+
 renderFavorite(snap) {
+  if(!this.state.snaps.length){
+    return <Text>nope</Text>
+  }
   const fav = snap.val()
   return (
   <View>
@@ -159,11 +177,10 @@ randomQuote(){
   let random = vegQuoteArray[Math.floor(Math.random() * vegQuoteArray.length)];
 
   return (
-    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-      <Text>{random}</Text>
-    </View>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: 'darkgreen', borderWidth: 2}}>
+          <Text style={{textAlign: 'center', fontSize: 17, marginTop: 5, marginBottom: 5, marginLeft: 2, marginRight: 2}}>{random}</Text>
+        </View>
   )
-
 }
 
 
@@ -173,6 +190,7 @@ randomQuote(){
       <View style={{flex: 1, justifyContent: 'center'}}>
       <ScrollView>
         {this.randomQuote()}
+        {this.noFavorites()}
           {this.state.snaps.map(this.renderFavorite)}
       </ScrollView>
     </View>

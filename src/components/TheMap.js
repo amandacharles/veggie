@@ -14,8 +14,8 @@ class TheMap extends Component {
     region: {
       latitude: 37.78825,
       longitude: -122.4324,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitudeDelta: 0.0522,
+      longitudeDelta: 0.0021,
     },
     markers: [
       {
@@ -49,24 +49,9 @@ componentWillMount(){
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          },
-          markers: [
-            {
-              latlng: {
-                  latitude: 37.762033,
-                  longitude: -122.434759
-              },
-              title: 'Placeholder',
-              category: 'category',
-              veg_level: '',
-              long_d: '',
-              short_d: '',
-              price: '',
-              website: ''
-            }
-          ],
+            latitudeDelta: 0.0522,
+            longitudeDelta: 0.0021,
+          }
         })
       }
   )
@@ -74,8 +59,8 @@ componentWillMount(){
 
 componentDidMount(){
   this.callApi()
-  // this.callMyMarkers()
 }
+
 
 callApi(){
   setResults = [];
@@ -97,7 +82,7 @@ callApi(){
       }
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         if(res.data.businesses[0].coordinates.latitude && res.data.businesses[0].coordinates.longitude){
         setResults.push({
             latlng: {
@@ -132,31 +117,33 @@ onRegionChange(region) {
   this.setState({ region });
 }
 
-callMyMarkers(){
-  {this.state.markers.map(marker => {
-    return <MapView.Marker
-    key={marker.title}
-    coordinate={marker.latlng}>
-    <MapView.Callout style={{ flex: 1, position: 'relative'}}>
-  <View>
-    <Text>
-      {marker.title}
-    </Text>
-    <Text>
-      {marker.category}
-    </Text>
-  </View>
-</MapView.Callout>
-  </MapView.Marker>
-})}
-}
+// callMyMarkers(){
+//   {this.state.markers.map(marker => {
+//     return <MapView.Marker
+//     key={marker.title}
+//     coordinate={marker.latlng}>
+//     <MapView.Callout style={{ flex: 1, position: 'relative'}}>
+//   <View>
+//     <Text>
+//       {marker.title}
+//     </Text>
+//     <Text>
+//       {marker.category}
+//     </Text>
+//   </View>
+// </MapView.Callout>
+//   </MapView.Marker>
+// })}
+// }
 
 _handleBackPress() {
   this.props.navigator.pop();
+
 }
 
 _handleNextPress(restaurantRoute) {
   this.props.navigator.push(restaurantRoute);
+
 }
 
 
@@ -189,7 +176,8 @@ _handleNextPress(restaurantRoute) {
                           short_d: marker.short_d,
                           price: marker.price,
                           website: marker.website
-                         }
+                        },
+                        tintColor: '#f74509'
             })}>
           <View style={{flexDirection: 'column',
           justifyContent: 'center', alignItems: 'center'}}>

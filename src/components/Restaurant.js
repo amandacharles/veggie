@@ -4,6 +4,9 @@ import { Button, Card, CardSection, Input, Spinner } from './common';
 import axios from 'axios'
 import * as firebase from "firebase";
 import Favorites from './Favorites'
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import Communications from 'react-native-communications'
+
 
 
 class Restaurant extends Component {
@@ -38,6 +41,7 @@ class Restaurant extends Component {
 
 
 callApi(){
+
 axios.get(`https://api.yelp.com/v3/businesses/search?term=${this.props.name}&latitude=${this.props.latlng.latitude}&longitude=${this.props.latlng.longitude}&limit=1&radius=30000`,
         {headers: {
         'Authorization': 'Bearer KaYmgMa-GXIlQcg3gmjwolPMnSFOkLa9dzaG5NDhk5l1G5LfekRfzCMyj6WeoEE2KSON7mHxCjDYcNZY62DHgLNuf7-ZTEYwm2QIusj0cBtmaU5-C_eBraZFbfDCWHYx'
@@ -61,7 +65,8 @@ axios.get(`https://api.yelp.com/v3/businesses/search?term=${this.props.name}&lat
             }
           })
           .then((response) => {
-            console.log(response.data);
+          
+            // console.log(response.data);
             let reviewArr = []
             response.data.reviews.map(review => {
               if(review.text){
@@ -92,7 +97,9 @@ reviewsRender(){
         {/* <Card>
           <CardSection> */}
       <View style={styles.reviewContainer}>
-        <Text style={{fontSize: 20}}>{review.text}</Text>
+        <View style={styles.reviewTextWrap}>
+        <Text style={{fontSize: 15, fontStyle: 'italic'}}>{review.text}</Text>
+      </View>
       </View>
     {/* </CardSection>
     </Card> */}
@@ -144,13 +151,15 @@ _handleNextPress(nextRoute) {
 }
 
   render() {
-    console.log(this.state.reviews);
+    // console.log(this.state.reviews);
     return(
       <ScrollView>
+
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', marginLeft: 5, marginRight: 5 }}>
 
+
       <View style={styles.topContainer}>
-        <View><Text style={styles.nameText}>{this.props.name}</Text></View>
+
         <TouchableHighlight
           onPress={()=>this.sendToDatabase(
             this.props.name,
@@ -168,27 +177,74 @@ _handleNextPress(nextRoute) {
       </TouchableHighlight>
       </View>
 
-
     <View style={styles.infoContainer}>
-      <Text style={styles.infoText}>{this.props.veg_level}</Text>
+      <View style={{alignItems: 'center'}}><Text style={styles.nameText}>{this.props.name}</Text></View>
+      <Text style={styles.infoTextPurp}>{this.props.veg_level}</Text>
       <Text style={styles.infoText}>{this.props.price}</Text>
-      <Text style={styles.infoText}>{this.state.phone}</Text>
+      <TouchableHighlight onPress={()=> Communications.phonecall(this.state.phone,true )}>
+      <Text style={styles.infoText} style={{color: 'blue', fontSize: 20}}>{this.state.phone}</Text>
+    </TouchableHighlight>
+
       <Text style={styles.infoText}>{this.props.long_d['text/vnd.vegguide.org-wikitext']}</Text>
+
     </View>
+
 
     <Image style={styles.yelpImage} source={{uri: this.state.image}}/>
 
+
+
+    <TouchableOpacity style={{marginTop: 7}} onPress={()=> Linking.openURL(`http://maps.google.com/?q=${this.props.latlng.latitude},${this.props.latlng.longitude}`)}>
+    <View style={{height: 150}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F5FCFF'}}>
+
+      <MapView style={{position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,}}
+      region={{
+    latitude: this.props.latlng.latitude,
+    longitude: this.props.latlng.longitude,
+    latitudeDelta: 0.03,
+    longitudeDelta: 0.0021,
+
+  }}>
+  <MapView.Marker
+      coordinate={{
+          latitude: this.props.latlng.latitude,
+          longitude: this.props.latlng.longitude
+      }}
+    />
+      </MapView>
+
+    </View>
+    </View>
+  </TouchableOpacity>
+
+
+
+
+
+
+
+
     <View style={styles.buttonContainer}>
-      <TouchableOpacity onPress={()=> Linking.openURL(this.state.yelpSite)} style={styles.buttons}>
-        <Text>YELP</Text>
+      <CardSection>
+      <TouchableOpacity onPress={()=> Linking.openURL(this.state.yelpSite)} style={styles.buttonYelp}>
+        <Image source={require('./yelp.png')} style={{height: 40, width: 70}}/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=> Linking.openURL(this.props.website)} style={styles.buttons}>
-        <Text>WEBSITE</Text>
+    </CardSection>
+      <CardSection>
+      <TouchableOpacity onPress={()=> Linking.openURL(this.props.website)} style={styles.buttonWeb}>
+        <Text style={{color: 'white'}}>WEBSITE</Text>
       </TouchableOpacity>
+   </CardSection>
+
     </View>
 
     <View style={{flexDirection: 'row', justifyContent: 'center', margin: 7}}>
-      <Text style={{fontSize: 20, textDecorationLine: 'underline'}}>Reviews</Text>
+      <Text style={{fontSize: 20}}>REVIEWS</Text>
     </View>
 
     {this.reviewsRender()}
@@ -201,6 +257,7 @@ _handleNextPress(nextRoute) {
 const styles = {
   nameText: {
     fontSize: 30,
+    textAlign: 'center'
 
   },
   heartImage: {
@@ -211,38 +268,53 @@ const styles = {
     marginTop: 7
   },
   yelpImage: {
-    height: 200
+    height: 300
   },
-  buttons: {
-    height: 30,
+  buttonYelp: {
+    height: 50,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderRadius: 2,
     paddingRight: 20,
     paddingLeft: 20,
     paddingTop: 10,
     paddingBottom: 10,
-    marginTop:5
+    marginTop:5,
+    elevation: 1,
+    backgroundColor: '#f74509'
   },
-  buttonText: {
-
+    buttonWeb: {
+    height: 50,
+    justifyContent: 'center',
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop:5,
+    elevation: 1,
+    backgroundColor: '#4d067a'
   },
   topContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginBottom: 5,
     marginLeft: 5,
     marginRight: 5,
     marginTop: 7
   },
+
   infoContainer: {
     marginBottom: 5,
     flexDirection: 'column',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   infoText: {
     marginBottom: 3,
-    fontSize: 15
+    fontSize: 20
+  },
+  infoTextPurp: {
+    marginBottom: 3,
+    fontSize: 20,
+    color: 'indigo'
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -259,10 +331,27 @@ const styles = {
     justifyContent: 'center'
   },
   reviewContainer: {
-    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
     marginLeft: 5,
     marginRight: 5,
-    flex: 1,
+    marginTop: 10
+  },
+  reviewTextWrap: {
+    borderBottomWidth: 1,
+    padding: 5,
+    backgroundColor: '#fff',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    borderColor: "#ddd",
+    position: 'relative'
   }
 }
 
