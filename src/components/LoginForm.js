@@ -12,12 +12,12 @@ class LoginForm extends Component {
     this.setState({ error: '', loading: true });
 
     firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(this.onLoginSuccess.bind(this))
+    .catch(() => {
+      firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(this.onLoginSuccess.bind(this))
-      .catch(() => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(this.onLoginSuccess.bind(this))
-          .catch(this.onLoginFail.bind(this));
-      });
+      .catch(this.onLoginFail.bind(this));
+    });
   }
 
   onLoginFail() {
@@ -47,38 +47,37 @@ class LoginForm extends Component {
   render() {
     return (
       <View style={{marginTop: 40, justifyContent: 'center', marginBottom: 70}}>
-        <TextInput/>
-      <Card>
-        <CardSection>
-
-          <Input
-            placeholder="user@gmail.com"
-            label="Email"
-            value={this.state.email}
-            onChangeText={email => this.setState({ email })}
-          />
-        </CardSection>
-
-        <CardSection>
-          <Input
-            secureTextEntry
-            placeholder="password"
-            label="Password"
-            value={this.state.password}
-            onChangeText={password => this.setState({ password })}
-          />
-        </CardSection>
-
-        <Text style={styles.errorTextStyle}>
-          {this.state.error}
-        </Text>
-
-        <CardSection>
-          {this.renderButton()}
-        </CardSection>
-      </Card>
+        <View style={{justifyContent: 'center'}}>
+      <Text style={styles.label}>LogIn / SignUp</Text>
     </View>
+        <Card>
+          <CardSection>
+            <Input
+              placeholder="user@gmail.com"
+              label="Email"
+              value={this.state.email}
+              onChangeText={email => this.setState({ email })}
+            />
+          </CardSection>
 
+          <CardSection>
+            <Input
+              secureTextEntry
+              placeholder="password"
+              label="Password"
+              value={this.state.password}
+              onChangeText={password => this.setState({ password })}
+            />
+          </CardSection>
+          <Text style={styles.errorTextStyle}>
+            {this.state.error}
+          </Text>
+
+          <CardSection>
+            {this.renderButton()}
+          </CardSection>
+        </Card>
+      </View>
     );
   }
 }
@@ -88,6 +87,11 @@ const styles = {
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
+  },
+  label: {
+    textAlign: 'center',
+    color: '#051938',
+    fontSize: 20
   }
 };
 

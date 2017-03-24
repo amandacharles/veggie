@@ -5,11 +5,7 @@ import Main from './src/components/Main'
 import * as firebase from "firebase";
 console.disableYellowBox = true;
 
-
-
 export default class App extends React.Component {
-
-
 
   render() {
     return (
@@ -18,8 +14,8 @@ export default class App extends React.Component {
         initialRoute={{
           component: Main,
           title: 'Tofudi',
-          tintColor: '#f74509',
-          passProps: {tintColor: '#f74509'}
+          tintColor: '#256B12',
+          passProps: {tintColor: '#256B12'}
         }}
         style={{flex: 1}}
       />

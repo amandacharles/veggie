@@ -15,9 +15,9 @@ const Button = ({ onPress, children }) => {
     buttonStyle: {
       flex: 1,
       alignSelf: 'stretch',
-      backgroundColor: 'indigo',
+      backgroundColor: '#152D54',
       borderWidth: 1,
-      borderColor: 'indigo',
+      borderColor: '#051938',
       marginLeft: 5,
       marginRight: 5
     },

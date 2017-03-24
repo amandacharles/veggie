@@ -1,13 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight, Image } from 'react-native';
+import * as firebase from "firebase";
 import { Button, Card, CardSection } from './common';
 import LoginForm from './LoginForm';
 import ListView from './ListView';
 import TheMap from './TheMap';
 import Favorites from './Favorites'
-import * as firebase from "firebase";
-
-
 
 class Main extends Component {
 
@@ -33,10 +31,6 @@ class Main extends Component {
       });
     }
 
-    _handleNavigationRequest(){
-
-    }
-
   _handleBackPress() {
     this.props.navigator.pop();
   }
@@ -49,19 +43,21 @@ class Main extends Component {
     const ListViewRoute = {
       component: ListView,
       title: 'Search',
-      tintColor: '#f74509',
+      tintColor: '#256B12',
+      passProps: {tintColor: '#256B12'}
 
     };
     const MapViewRoute = {
       component: TheMap,
       title: "Map",
-      tintColor: '#f74509'
+      tintColor: '#256B12',
+      passProps: {tintColor: '#256B12'}
     }
     const FavoritesRoute = {
       component: Favorites,
       title: 'Favorites',
-      tintColor: '#f74509'
-
+      tintColor: '#256B12',
+      passProps: {tintColor: '#256B12'}
     }
 
     return(
@@ -69,7 +65,6 @@ class Main extends Component {
         <View>
       { (this.state.loggedIn) ?
          ( <View>
-
 
            {/* <View >
   <View style={{height: 50 ,marginBottom: 10, marginRight: 30, marginLeft: 30}}>
@@ -98,27 +93,27 @@ class Main extends Component {
 
            <View>
              <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-             style={{height: 90, backgroundColor: '#4d067a', justifyContent: 'center'}}>
+             style={{height: 90, backgroundColor: '#246C60', justifyContent: 'center'}}>
              <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
                Map
              </Text>
            </TouchableHighlight>
              <TouchableHighlight onPress={() => this._handleNextPress(ListViewRoute)}
-             style={{height: 90, backgroundColor: '#f74509', justifyContent: 'center'}}>
+             style={{height: 90, backgroundColor: '#448F30', justifyContent: 'center'}}>
              <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
                Search
              </Text>
            </TouchableHighlight>
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}
-           style={{height: 70, backgroundColor: 'darkgreen', justifyContent: 'center'}}>
+           style={{height: 70, backgroundColor: '#2C4770', justifyContent: 'center'}}>
            <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
              Favorites
            </Text>
          </TouchableHighlight>
        </View>
 
-<View style={{alignSelf: 'stretch', alignItems: 'flex-end', backgroundColor: 'darkgreen'}}>
+<View style={{alignSelf: 'stretch', alignItems: 'flex-end', backgroundColor: '#2C4770'}}>
   <TouchableHighlight onPress={() => this.setState({ loggedIn: null})}>
     <Text style={{color: 'white', textAlign: 'flex-end', marginBottom: 8, marginRight: 20}}>
       LogOut
@@ -128,7 +123,8 @@ class Main extends Component {
 </View>
 
      )
-      : (
+      :
+      (
         <View  >
         <LoginForm style={{justifyContent: 'center'}}/>
       </View>

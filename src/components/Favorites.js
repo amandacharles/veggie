@@ -2,44 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Text, NavigatorIOS, View, TouchableHighlight, ListView, Image, ScrollView, Linking} from 'react-native';
 import { Button, CardSection, Input, Spinner, Card, Clickable } from './common';
 import * as firebase from 'firebase';
-import vegQuoteArray from './vquotes.js'
-
-const styles = {
-    headerContentStyle: {
-      flexDirection: 'column',
-      justifyContent: 'space-around'
-    },
-    headerTextStyle: {
-      fontSize: 18
-    },
-    thumbNailStyle: {
-      height: 50,
-      width: 50,
-      flexDirection: 'column',
-      justifyContent: 'flex-end'
-    },
-    thumbNailContainerStyle: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginLeft: 10,
-      marginRight: 10,
-      padding: 1
-
-    },
-    imageStyle: {
-      height: 300,
-      flex: 1,
-      width: null
-    },
-  }
-
-  const { thumbNailStyle,
-    headerContentStyle,
-    thumbNailContainerStyle,
-    headerTextStyle,
-    imageStyle
-    } = styles;
-
+import vegQuoteArray from './vquotes.js';
 
 class Favorites extends Component {
   constructor(props){
@@ -49,7 +12,6 @@ class Favorites extends Component {
       name: '',
       snaps: []
     }
-    // this.showFavorites = this.showFavorites.bind(this)
     this.renderFavorite = this.renderFavorite.bind(this)
     this.deleteFav = this.deleteFav.bind(this)
     this.randomQuote = this.randomQuote.bind(this);
@@ -66,7 +28,6 @@ class Favorites extends Component {
 
     itemsRef.on('value', (snap) => {
       snap.val()
-      // console.log(snap.val());
     });
     itemsRef.once('value', function (snap) {
        snap.forEach(function (childSnap) {
@@ -78,43 +39,24 @@ class Favorites extends Component {
     })
   }
 
-
-
-// showFavorites(){
-//     const favorites = this.state.favorites;
-//
-//   Object.keys(favorites).map((key, index) => {
-//     console.log(key);
-//     let favorite = favorites[key];
-//     return
-//     <View>
-//     <Text>{favorite.name}</Text>
-//     </View>
-//   });
-//
-// }
-
-deleteFav(snap){
+  deleteFav(snap){
   const self = this;
 
   const database = firebase.database();
   const userId = firebase.auth().currentUser.uid;
 
   favesRef = database.ref('/users/' + userId + '/favorites/' + snap.key);
-
   favesRef.remove();
 
   let index = this.state.snaps.indexOf(snap.val())
-  console.log(snap.val());
   const newArr = [...this.state.snaps]
   newArr.splice(index, 1)
-
     self.setState({
     snaps: newArr
   })
 }
 
-noFavorites(){
+  noFavorites(){
   if(!this.state.snaps.length){
     return (
       <View style={{justifyContent: 'center', marginTop:50}}>
@@ -125,7 +67,8 @@ noFavorites(){
     )
   }
 }
-renderFavorite(snap) {
+
+  renderFavorite(snap) {
   if(!this.state.snaps.length){
     return <Text>nope</Text>
   }
@@ -146,8 +89,8 @@ renderFavorite(snap) {
                   <View style={headerContentStyle}>
                     <Clickable onPress={()=> Linking.openURL(fav.website)}>
                     <Text>{fav.phone}</Text>
-                    <Text style={{flexWrap: "wrap"}}>{fav.veg_level_description}</Text>
-                    <Text>{fav.price_range}</Text>
+                    <Text style={{flexWrap: "wrap", color: '#256B12'}}>{fav.veg_level_description}</Text>
+                    <Text style={{color: '#2C4770'}}>{fav.price_range}</Text>
                     <Text style={{flexWrap: "wrap"}}>{fav.short_description}</Text>
                   </Clickable>
                   </View>
@@ -165,15 +108,17 @@ renderFavorite(snap) {
           </Card>
         </View>
       )
-}
-randomQuote(){
+    }
+
+  randomQuote(){
   let random = vegQuoteArray[Math.floor(Math.random() * vegQuoteArray.length)];
   return (
-        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: 'darkgreen', borderWidth: 2}}>
-          <Text style={{textAlign: 'center', fontSize: 17, marginTop: 5, marginBottom: 5, marginLeft: 2, marginRight: 2}}>{random}</Text>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: '#0D5146', backgroundColor: '#246C60', borderWidth: 2}}>
+          <Text style={{textAlign: 'center', fontSize: 17, marginTop: 5, marginBottom: 5, marginLeft: 2, marginRight: 2, color: 'floralwhite'}}>{random}</Text>
         </View>
   )
 }
+
   render() {
     console.log(this.state.snaps);
     return (
@@ -187,4 +132,40 @@ randomQuote(){
     );
   }
 }
+
+  const styles = {
+    headerContentStyle: {
+      flexDirection: 'column',
+      justifyContent: 'space-around'
+    },
+    headerTextStyle: {
+      fontSize: 18
+    },
+    thumbNailStyle: {
+      height: 50,
+      width: 50,
+      flexDirection: 'column',
+      justifyContent: 'flex-end'
+    },
+    thumbNailContainerStyle: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginLeft: 10,
+      marginRight: 10,
+      padding: 1
+    },
+    imageStyle: {
+      height: 300,
+      flex: 1,
+      width: null
+    },
+  }
+
+  const { thumbNailStyle,
+    headerContentStyle,
+    thumbNailContainerStyle,
+    headerTextStyle,
+    imageStyle
+    } = styles;
+
 export default Favorites;

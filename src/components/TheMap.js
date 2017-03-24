@@ -162,6 +162,7 @@ _handleNextPress(restaurantRoute) {
           onRegionChange={this.state.onRegionChange}>
           {this.state.markers.map(marker => {
             return <MapView.Marker
+            pinColor='#0F4700'
             key={marker.title}
             coordinate={marker.latlng}>
             <MapView.Callout style={{ flex: 1, position: 'relative'}}>
@@ -177,17 +178,17 @@ _handleNextPress(restaurantRoute) {
                           price: marker.price,
                           website: marker.website
                         },
-                        tintColor: '#f74509'
+                        tintColor: '#256B12'
             })}>
           <View style={{flexDirection: 'column',
           justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{fontWeight:'bold'}}>
               {marker.title}
             </Text>
-            <Text>
+            <Text style={{color: '#051938'}}>
               {marker.price}
             </Text>
-            <Text>
+            <Text style={{color: '#256B12'}}>
               {marker.category}
             </Text>
           </View>
