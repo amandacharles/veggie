@@ -65,7 +65,7 @@ axios.get(`https://api.yelp.com/v3/businesses/search?term=${this.props.name}&lat
             }
           })
           .then((response) => {
-          
+
             // console.log(response.data);
             let reviewArr = []
             response.data.reviews.map(review => {

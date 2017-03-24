@@ -125,8 +125,6 @@ noFavorites(){
     )
   }
 }
-
-
 renderFavorite(snap) {
   if(!this.state.snaps.length){
     return <Text>nope</Text>
@@ -135,7 +133,6 @@ renderFavorite(snap) {
   return (
   <View>
     <Card key={fav.name}>
-
           <Clickable onPress={()=> Linking.openURL(fav.website)}>
             <View style={thumbNailContainerStyle}>
               <View >
@@ -143,9 +140,7 @@ renderFavorite(snap) {
               </View>
             </View>
           </Clickable>
-
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-
             <View style={{flexDirection:'row', justifyContent: 'flex-start'}}>
                 <CardSection>
                   <View style={headerContentStyle}>
@@ -158,7 +153,6 @@ renderFavorite(snap) {
                   </View>
                 </CardSection>
             </View>
-
     <View style={{flexDirection:"column", justifyContent: "flex-end"}}>
             <Clickable  style={{ flexDirection: 'column', justifyContent: 'flex-end'}}
               onPress={()=> this.deleteFav(snap)}>
@@ -172,18 +166,14 @@ renderFavorite(snap) {
         </View>
       )
 }
-
 randomQuote(){
   let random = vegQuoteArray[Math.floor(Math.random() * vegQuoteArray.length)];
-
   return (
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', borderColor: 'darkgreen', borderWidth: 2}}>
           <Text style={{textAlign: 'center', fontSize: 17, marginTop: 5, marginBottom: 5, marginLeft: 2, marginRight: 2}}>{random}</Text>
         </View>
   )
 }
-
-
   render() {
     console.log(this.state.snaps);
     return (
@@ -197,6 +187,4 @@ randomQuote(){
     );
   }
 }
-
-
 export default Favorites;
