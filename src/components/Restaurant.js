@@ -144,6 +144,7 @@ class Restaurant extends Component {
         return(
           <ScrollView>
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', marginLeft: 5, marginRight: 5 }}>
+
               <View style={styles.topContainer}>
                 <TouchableHighlight
                   onPress={()=>this.sendToDatabase(
@@ -158,14 +159,14 @@ class Restaurant extends Component {
                     this.state.image,
                     this.state.yelpID,
                     this.state.reviews)}>
-                    <Image style={styles.heartImage} source={require('./gheart.png')}/>
+                    <Image style={styles.heartImage} source={require('./faveHeart.png')}></Image>
                   </TouchableHighlight>
                 </View>
 
                 <View style={styles.infoContainer}>
                   <View style={{alignItems: 'center'}}><Text style={styles.nameText}>{this.props.name}</Text></View>
                   <Text style={styles.infoTextPurp}>{this.props.veg_level}</Text>
-                  <Text style={styles.infoText} style={{color: '#2C4770'}}>{this.props.price}</Text>
+                  <Text style={styles.infoText} style={{color: '#2C4770', fontWeight: 'bold'}}>{this.props.price}</Text>
                   <TouchableHighlight onPress={()=> Communications.phonecall(this.state.phone,true )}>
                     <Text style={styles.infoText} style={{color: '#152D54', fontSize: 20}}>{this.state.phone}</Text>
                   </TouchableHighlight>
@@ -231,11 +232,12 @@ class Restaurant extends Component {
         marginBottom: 4
       },
       heartImage: {
-        height: 30,
-        width: 30,
-        marginLeft: 5,
-        marginRight: 5,
-        marginTop: 7
+        height: 50,
+        width: 50,
+        marginRight: 8,
+        marginTop: 3,
+        marginBottom: 3,
+        resizeMode: 'contain'
       },
       yelpImage: {
         height: 300
@@ -268,7 +270,8 @@ class Restaurant extends Component {
         marginBottom: 5,
         marginLeft: 5,
         marginRight: 5,
-        marginTop: 7
+        marginTop: 7,
+        backgroundColor: '#7689A9'
       },
       infoContainer: {
         marginBottom: 5,

@@ -7,6 +7,7 @@ import Main from './Main'
 import Item from './Item'
 import Restaurant from './Restaurant'
 import Favorites from './Favorites'
+import animalPicArray from './picLinks.js'
 const PickerItemIOS = PickerIOS.Item;
 
 
@@ -32,14 +33,17 @@ class ListView extends Component {
       filters: 'veg_level=5',
       filteredResults: [],
       searched: false,
+      randomPic: '',
+      randomColor: ''
     }
 
-    this.componentWillMount = this.componentWillMount.bind(this)
-    this.renderRestaurantList = this.renderRestaurantList.bind(this)
+    this.componentWillMount = this.componentWillMount.bind(this);
+    this.renderRestaurantList = this.renderRestaurantList.bind(this);
     this.callApi = this.callApi.bind(this);
     this._handleBackPress = this._handleBackPress.bind(this);
     this._handleNextPress = this._handleNextPress.bind(this);
     this.priceFiltered = this.priceFiltered.bind(this);
+    this.randomPicGen = this.randomPicGen.bind(this);
   }
 
 
@@ -74,6 +78,7 @@ class ListView extends Component {
         })
       }
     )
+    this.randomPicGen()
   }
 
   _handleBackPress() {
@@ -111,6 +116,28 @@ class ListView extends Component {
     })
   }
 
+  randomPicGen(){
+    let colorArray = [
+      '#6CA299',
+      '#0D5146',
+      '#00362D',
+      '#448F30',
+      '#9ED78F',
+      '#256B12',
+      '#0F4700',
+      '#2C4770',
+      '#152D54'
+    ]
+  let randomColor = colorArray[Math.floor(Math.random() * colorArray.length)];
+  let randomPic = animalPicArray[Math.floor(Math.random() * animalPicArray.length)];
+
+  this.setState({
+    randomPic,
+    randomColor
+  })
+
+}
+
 
   renderRestaurantList(){
     return this.state.filteredResults.map(result =>
@@ -136,14 +163,12 @@ class ListView extends Component {
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', flex:.9}}>
           <View style={{flexDirection:"row", justifyContent: "center", flex:.9}}>
-            <CardSection>
               <View style={headerContentStyle}>
                 <Text style={{color: '#051938'}}>{result.phone}</Text>
                 <Text style={{flexWrap: "wrap", color: '#448F30'}}>{result.veg_level_description}</Text>
                 <Text style={{color: '#2C4770'}}>{result.price_range}</Text>
                 <Text style={{flexWrap: "wrap"}} adjustsFontSizeToFit={true} >{result.short_description}</Text>
               </View>
-            </CardSection>
           </View>
 
           <View style={{flexDirection:"column", justifyContent: "flex-end", marginRight:2, marginBottom: 10, paddingRight: 6}}>
@@ -225,9 +250,9 @@ render() {
             )
             :
             (
-              <View >
-                <Image style={{height: 250, marginTop: 30}}
-                  source={{uri: 'https://static.pexels.com/photos/35631/sheep-luka-nature-lamb.jpg'}}>
+              <View style={{backgroundColor: this.state.randomColor, justifyContent: 'center', marginTop: 30, padding: 7}}>
+                <Image style={{height: 250}}
+                  source={{uri: this.state.randomPic}}>
                 </Image>
               </View>
             )
@@ -241,7 +266,8 @@ const styles = {
   headerContentStyle: {
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 3
   },
   headerTextStyle: {
     fontSize: 18,

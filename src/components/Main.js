@@ -61,7 +61,7 @@ class Main extends Component {
     }
 
     return(
-      <Image source={require('./tofudiMan.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'contain', width: null, height: null}}>
+      <Image source={require('./ttofudiBG.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'contain', width: null, height: null}}>
         <View>
       { (this.state.loggedIn) ?
          ( <View>

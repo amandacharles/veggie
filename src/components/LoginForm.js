@@ -47,7 +47,7 @@ class LoginForm extends Component {
   render() {
     return (
       <View style={{marginTop: 40, justifyContent: 'center', marginBottom: 70}}>
-        <View style={{justifyContent: 'center'}}>
+        <View style={{justifyContent: 'center', backgroundColor: '#7689A9'}}>
       <Text style={styles.label}>LogIn / SignUp</Text>
     </View>
         <Card>
@@ -90,7 +90,7 @@ const styles = {
   },
   label: {
     textAlign: 'center',
-    color: '#051938',
+    color: 'white',
     fontSize: 20
   }
 };

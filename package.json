@@ -10,6 +10,8 @@
     "eslint-plugin-react-native": "^2.3.1",
     "firebase": "^3.7.2",
     "jest-expo": "^0.2.1",
+    "react-native-linear-gradient": "react-native-community/react-native-linear-gradient",
+    "react-native-linear-gradient": "^2.0.0",
     "react-native-scripts": "0.0.18",
     "react-test-renderer": "~15.4.0"
   },
@@ -35,6 +37,7 @@
     "react": "~15.4.0",
     "react-native": "0.41.2",
     "react-native-firebase": "^1.0.0-alpha3",
+    "react-native-linear-gradient": "^2.0.0",
     "react-native-maps": "^0.12.4"
   }
 }
