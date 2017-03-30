@@ -64,7 +64,7 @@ componentDidMount(){
 
 callApi(){
   setResults = [];
-  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=5`,
+  axios.get(`http://www.vegguide.org/search/by-lat-long/${this.state.region.latitude},${this.state.region.longitude}/distance=5/filter/veg_level=1`,
     {headers: {
     'User-Agent': 'Vegout Project'
   }
@@ -166,7 +166,7 @@ _handleNextPress(restaurantRoute) {
             key={marker.title}
             coordinate={marker.latlng}>
             <MapView.Callout style={{ flex: 1, position: 'relative'}}>
-            <TouchableHighlight  onPress={() => this._handleNextPress({
+            <TouchableHighlight  underlayColor='white' onPress={() => this._handleNextPress({
               component: Restaurant,
               title: 'Restaurant',
               passProps: { name: marker.title,

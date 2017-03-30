@@ -61,7 +61,7 @@ class Main extends Component {
     }
 
     return(
-      <Image source={require('./ttofudiBG.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'contain', width: null, height: null}}>
+      <Image source={require('./bgtf.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'cover', width: null, height: null}}>
         <View>
       { (this.state.loggedIn) ?
          ( <View>
@@ -93,13 +93,13 @@ class Main extends Component {
 
            <View>
              <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-             style={{height: 90, backgroundColor: '#246C60', justifyContent: 'center'}}>
+             style={{height: 80, backgroundColor: '#246C60', justifyContent: 'center'}}>
              <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
                Map
              </Text>
            </TouchableHighlight>
              <TouchableHighlight onPress={() => this._handleNextPress(ListViewRoute)}
-             style={{height: 90, backgroundColor: '#448F30', justifyContent: 'center'}}>
+             style={{height: 80, backgroundColor: '#448F30', justifyContent: 'center'}}>
              <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
                Search
              </Text>

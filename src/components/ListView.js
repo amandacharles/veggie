@@ -153,7 +153,7 @@ class ListView extends Component {
           price: result.price_range,
           website: result.website
         },
-        tintColor: '#f74509'
+        tintColor: '#256B12'
       })}>
       <Card key={result.name}>
         <View style={thumbNailContainerStyle} >
@@ -200,7 +200,7 @@ render() {
           onValueChange={(value) => this.setState({filters: value, searched: false})}>
           <PickerItemIOS
             value={'veg_level=1;category_id=6'}
-            label={'I need a drink.'}
+            label={'Adult Beverages'}
           />
           <PickerItemIOS
             value={'veg_level=2;category_id=1;category_id=9'}
@@ -212,7 +212,7 @@ render() {
           />
           <PickerItemIOS
             value={'veg_level=4;category_id=1;category_id=9'}
-            label={'Vegetarian.'}
+            label={'Vegetarian'}
           />
           <PickerItemIOS
             value={'veg_level=1;category_id=1;category_id=9'}
@@ -220,7 +220,7 @@ render() {
           />
           <PickerItemIOS
             value={'veg_level=2;category_id:5'}
-            label={'Coffee/Tea/Juice'}
+            label={'Coffee and Juice'}
           />
         </PickerIOS>
       </View>

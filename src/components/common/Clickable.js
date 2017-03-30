@@ -5,7 +5,7 @@ const Clickable = ({ onPress, children }) => {
 
   return (
 
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity underlayColor='white' onPress={onPress}>
       {children}
     </TouchableOpacity>
 

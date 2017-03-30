@@ -147,6 +147,7 @@ class Restaurant extends Component {
 
               <View style={styles.topContainer}>
                 <TouchableHighlight
+                  underlayColor='white'
                   onPress={()=>this.sendToDatabase(
                     this.props.name,
                     this.props.short_d,
