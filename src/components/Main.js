@@ -6,6 +6,8 @@ import LoginForm from './LoginForm';
 import ListView from './ListView';
 import TheMap from './TheMap';
 import Favorites from './Favorites'
+import { Components } from 'expo';
+const { LinearGradient } = Components;
 
 class Main extends Component {
 
@@ -61,7 +63,7 @@ class Main extends Component {
     }
 
     return(
-      <Image source={require('./bgtf.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'cover', width: null, height: null}}>
+      <Image source={require('./bgtfGlow.png')} style={{flex:1, justifyContent:'flex-end', resizeMode: 'cover', width: null, height: null}}>
         <View>
       { (this.state.loggedIn) ?
          ( <View>
@@ -91,35 +93,46 @@ class Main extends Component {
 </View>
 </View> */}
 
-           <View>
+           <View style={{width: 300, alignSelf: 'center'}}>
+
+        <LinearGradient style={{marginBottom: 5, borderRadius:8}} colors={['#0D5146', '#43877C']}>
              <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-             style={{height: 80, backgroundColor: '#246C60', justifyContent: 'center'}}>
-             <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
+             style={{height: 70, backgroundColor: 'transparent', justifyContent: 'center'}}>
+             <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'center', fontSize: 30}}>
                Map
              </Text>
            </TouchableHighlight>
+         </LinearGradient>
+
+         <LinearGradient style={{marginBottom: 5, borderRadius:8}} colors={['#256B12', '#6CB359']}>
              <TouchableHighlight onPress={() => this._handleNextPress(ListViewRoute)}
-             style={{height: 80, backgroundColor: '#448F30', justifyContent: 'center'}}>
-             <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
+             style={{height: 70, backgroundColor: 'transparent', justifyContent: 'center'}}>
+             <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'center', fontSize: 30}}>
                Search
              </Text>
            </TouchableHighlight>
+         </LinearGradient>
+
+           <LinearGradient style={{marginBottom: 8, borderRadius:8}} colors={['#152D54', '#4D658D']}>
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}
-           style={{height: 70, backgroundColor: '#2C4770', justifyContent: 'center'}}>
-           <Text style={{color: 'white', textAlign: 'center', fontSize: 30}}>
+           style={{height: 70, backgroundColor: 'transparent', justifyContent: 'center'}}>
+           <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'center', fontSize: 30}}>
              Favorites
            </Text>
          </TouchableHighlight>
+       </LinearGradient>
        </View>
 
-<View style={{alignSelf: 'stretch', alignItems: 'flex-end', backgroundColor: '#2C4770'}}>
+{/* <LinearGradient colors={['#152D54', '#051938']}> */}
+ <View style={{alignSelf: 'stretch', alignItems: 'flex-end', backgroundColor: 'transparent'}}>
   <TouchableHighlight onPress={() => this.setState({ loggedIn: null})}>
-    <Text style={{color: 'white', textAlign: 'flex-end', marginBottom: 8, marginRight: 20}}>
+    <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'flex-end', marginBottom: 8, marginRight: 20}}>
       LogOut
     </Text>
   </TouchableHighlight>
 </View>
+{/* // </LinearGradient> */}
 </View>
 
      )
