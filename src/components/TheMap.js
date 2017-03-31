@@ -4,6 +4,8 @@ import { Card, Button, CardSection, Input, Spinner } from './common';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import Restaurant from './Restaurant'
 import axios from 'axios'
+import { Components } from 'expo';
+const { LinearGradient } = Components;
 
 
 class TheMap extends Component {

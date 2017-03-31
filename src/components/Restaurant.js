@@ -6,6 +6,8 @@ import { Button, Card, CardSection, Input, Spinner } from './common';
 import Favorites from './Favorites'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import Communications from 'react-native-communications'
+import { Components } from 'expo';
+const { LinearGradient } = Components;
 
 class Restaurant extends Component {
   constructor(props){
@@ -145,6 +147,7 @@ class Restaurant extends Component {
           <ScrollView>
             <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', marginLeft: 5, marginRight: 5 }}>
 
+              <LinearGradient colors={['#4D658D', '#7689A9', 'white']}>
               <View style={styles.topContainer}>
                 <TouchableHighlight
                   underlayColor='white'
@@ -163,6 +166,7 @@ class Restaurant extends Component {
                     <Image style={styles.heartImage} source={require('./faveHeart.png')}></Image>
                   </TouchableHighlight>
                 </View>
+              </LinearGradient>
 
                 <View style={styles.infoContainer}>
                   <View style={{alignItems: 'center'}}><Text style={styles.nameText}>{this.props.name}</Text></View>
@@ -268,11 +272,11 @@ class Restaurant extends Component {
       topContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
-        marginBottom: 5,
+
         marginLeft: 5,
         marginRight: 5,
-        marginTop: 7,
-        backgroundColor: '#7689A9'
+
+        backgroundColor: 'transparent'
       },
       infoContainer: {
         marginBottom: 5,

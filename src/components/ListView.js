@@ -9,6 +9,8 @@ import Restaurant from './Restaurant'
 import Favorites from './Favorites'
 import animalPicArray from './picLinks.js'
 const PickerItemIOS = PickerIOS.Item;
+import { Components } from 'expo';
+const { LinearGradient } = Components;
 
 
 class ListView extends Component {
@@ -171,8 +173,8 @@ class ListView extends Component {
               </View>
           </View>
 
-          <View style={{flexDirection:"column", justifyContent: "flex-end", marginRight:2, marginBottom: 10, paddingRight: 6}}>
-            <Clickable  style={{  alignSelf: 'center', lexDirection: 'row', justifyContent: 'flex-end'}}
+          <View  style={{flexDirection:"column", justifyContent: "flex-end", marginRight:2, marginBottom: 10, paddingRight: 6}}>
+            <Clickable  style={{ alignSelf: 'center', flexDirection: 'row', justifyContent: 'flex-end'}}
               onPress={()=>this.sendToDatabase(
                 result.name,
                 result.short_description,
@@ -193,8 +195,9 @@ class ListView extends Component {
 
 render() {
   return(
+
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-      <View>
+      <View style={{paddingTop: 30}}>
         <PickerIOS
           selectedValue={this.state.filters}
           onValueChange={(value) => this.setState({filters: value, searched: false})}>
@@ -223,8 +226,7 @@ render() {
             label={'Coffee and Juice'}
           />
         </PickerIOS>
-      </View>
-
+</View>
       <View style={{marginBottom: 10}}>
         <SegmentedControlIOS
           style={{height: 40, marginLeft: 5, marginRight: 5}}
@@ -236,25 +238,32 @@ render() {
               this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
             }} />
           </View>
-          <View style={{ height:50, justifyContent: 'center', marginLeft:20, marginRight:20, elevation: 1}}>
-            <Button onPress={()=> this.callApi()}>
-              <Text>SEARCH</Text>
-            </Button>
+          <View style={{ height:50, justifyContent: 'center', marginLeft:20, marginRight:20, marginBottom: 5, elevation: 1}}>
+            <LinearGradient style={{borderRadius:8, height: 50, justifyContent: 'center'}} colors={['#152D54', '#4D658D']}>
+            <Clickable onPress={()=> this.callApi()}>
+              <Text style={{backgroundColor: 'transparent', color:'white', textAlign: 'center', fontSize: 20}}>SEARCH</Text>
+            </Clickable>
+          </LinearGradient>
           </View>
 
           { (this.state.searched) ?
             (
+              <LinearGradient colors={['white', '#4D658D']}>
               <ScrollView>
                 {this.renderRestaurantList()}
               </ScrollView>
+            </LinearGradient>
             )
             :
             (
-              <View style={{backgroundColor: this.state.randomColor, justifyContent: 'center', marginTop: 30, padding: 7}}>
+
+              <LinearGradient colors={[ 'white', this.state.randomColor, 'white']} style={{flex:1}}>
+              <View style={{backgroundColor: 'transparent', justifyContent: 'center', marginTop: 30, padding: 7}}>
                 <Image style={{height: 250}}
                   source={{uri: this.state.randomPic}}>
                 </Image>
               </View>
+            </LinearGradient>
             )
           }
         </View>
