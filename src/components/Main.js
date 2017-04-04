@@ -46,8 +46,7 @@ class Main extends Component {
       component: ListView,
       title: 'Search',
       tintColor: '#256B12',
-      passProps: {tintColor: '#256B12'}
-
+      passProps: { tintColor: '#256B12'}
     };
     const MapViewRoute = {
       component: TheMap,
@@ -95,14 +94,6 @@ class Main extends Component {
 
            <View style={{width: 300, alignSelf: 'center'}}>
 
-        <LinearGradient style={{marginBottom: 5, borderRadius:8}} colors={['#0D5146', '#43877C']}>
-             <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
-             style={{height: 70, backgroundColor: 'transparent', justifyContent: 'center'}}>
-             <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'center', fontSize: 30}}>
-               Map
-             </Text>
-           </TouchableHighlight>
-         </LinearGradient>
 
          <LinearGradient style={{marginBottom: 5, borderRadius:8}} colors={['#256B12', '#6CB359']}>
              <TouchableHighlight onPress={() => this._handleNextPress(ListViewRoute)}
@@ -113,6 +104,14 @@ class Main extends Component {
            </TouchableHighlight>
          </LinearGradient>
 
+         <LinearGradient style={{marginBottom: 5, borderRadius:8}} colors={['#0D5146', '#43877C']}>
+           <TouchableHighlight onPress={() => this._handleNextPress(MapViewRoute)}
+             style={{height: 70, backgroundColor: 'transparent', justifyContent: 'center'}}>
+             <Text style={{backgroundColor: 'transparent', color: 'white', textAlign: 'center', fontSize: 30}}>
+               Map
+             </Text>
+           </TouchableHighlight>
+         </LinearGradient>
            <LinearGradient style={{marginBottom: 8, borderRadius:8}} colors={['#152D54', '#4D658D']}>
          <TouchableHighlight
            onPress={() => this._handleNextPress(FavoritesRoute)}

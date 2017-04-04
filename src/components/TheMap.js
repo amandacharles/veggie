@@ -187,10 +187,13 @@ _handleNextPress(restaurantRoute) {
             <Text style={{fontWeight:'bold'}}>
               {marker.title}
             </Text>
+            <Text style={{color: '#256B12'}}>
+              {marker.veg_level}
+            </Text>
             <Text style={{color: '#051938'}}>
               {marker.price}
             </Text>
-            <Text style={{color: '#256B12'}}>
+            <Text style={{color: '#152D54'}}>
               {marker.category}
             </Text>
           </View>

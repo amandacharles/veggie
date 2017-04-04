@@ -40,28 +40,20 @@ class LoginForm extends Component {
       return <Spinner size="small" />;
     }
     return (
-      <LinearGradient style={{borderRadius:8, marginLeft: 125, marginBottom: 5, height: 50, width: 100, alignSelf: 'center', justifyContent: 'center',}} colors={['#256B12', '#6CB359']}>
-      <Clickable onPress={this.onButtonPress.bind(this)} style={{alignSelf: 'center'}}>
+      <LinearGradient style={{borderRadius:8, height: 50, width: 150, justifyContent: 'center', marginBottom: 6}} colors={['#116611', '#2D882D']}>
+      <Clickable onPress={this.onButtonPress.bind(this)}>
         <Text style={{backgroundColor: 'transparent', color:'white', textAlign: 'center', fontSize: 20}}>LogIn</Text>
       </Clickable>
     </LinearGradient>
 
-
-
-
-      // {/* <Button onPress={this.onButtonPress.bind(this)}>
-      //   Log in
-      // </Button> */}
     );
   }
 
   render() {
     return (
-      <View style={{marginTop: 40, justifyContent: 'center', marginBottom: 70}}>
-        <View style={{justifyContent: 'center', backgroundColor: 'transparent'}}>
-      <Text style={styles.label}>LogIn / SignUp</Text>
-    </View>
-        <Card>
+      <View style={{marginTop: 40, justifyContent: 'center', marginBottom: 50}}>
+
+        <Card style={{justifyContent: 'center', alignItems: 'center', marginTop: 7}}>
           <CardSection>
             <Input
               placeholder="user@gmail.com"
@@ -84,12 +76,13 @@ class LoginForm extends Component {
             {this.state.error}
           </Text>
 
-          <CardSection >
-
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
             {this.renderButton()}
-
-          </CardSection>
+          </View>
         </Card>
+        <View style={{justifyContent: 'center', backgroundColor: 'transparent', marginTop:5}}>
+          <Text style={styles.label}>Create Account</Text>
+        </View>
       </View>
     );
   }
@@ -104,7 +97,7 @@ const styles = {
   label: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 20
+    fontSize: 15
   }
 };
 

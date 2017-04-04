@@ -195,7 +195,6 @@ class ListView extends Component {
 
 render() {
   return(
-
     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
       <View style={{paddingTop: 30}}>
         <PickerIOS
@@ -238,6 +237,7 @@ render() {
               this.setPriceRange(event.nativeEvent.selectedSegmentIndex)
             }} />
           </View>
+
           <View style={{ height:50, justifyContent: 'center', marginLeft:20, marginRight:20, marginBottom: 5, elevation: 1}}>
             <LinearGradient style={{borderRadius:8, height: 50, justifyContent: 'center'}} colors={['#152D54', '#4D658D']}>
             <Clickable onPress={()=> this.callApi()}>
@@ -257,9 +257,9 @@ render() {
             :
             (
 
-              <LinearGradient colors={[ 'white', this.state.randomColor, 'white']} style={{flex:1}}>
+              <LinearGradient colors={[ 'white', '#152D54']} style={{flex:1}}>
               <View style={{backgroundColor: 'transparent', justifyContent: 'center', marginTop: 30, padding: 7}}>
-                <Image style={{height: 250}}
+                <Image style={{height: 250, borderRadius: 8}}
                   source={{uri: this.state.randomPic}}>
                 </Image>
               </View>
